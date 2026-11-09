@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { Home } from './pages/home/home';
 
 export const routes: Routes = [
   //? Route en Lazy loading pour la page Home (module)
@@ -10,10 +9,12 @@ export const routes: Routes = [
   },
   {
     path: 'lessons',
-    loadChildren: () => import('./pages/lessons/lessons.routes'),
+    loadChildren: () =>
+      import('./pages/lessons/lessons.routes').then((m) => m.LESSONS_ROUTES),
   },
   {
     path: 'exercices',
-    loadChildren: () => import('./pages/exercices/exercices.routes'),
+    loadChildren: () =>
+      import('./pages/exercices/exercices.routes').then((m) => m.EXERCICES_ROUTES),
   },
 ];

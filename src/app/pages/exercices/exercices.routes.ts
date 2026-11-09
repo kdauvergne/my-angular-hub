@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-export default [
+export const EXERCICES_ROUTES: Routes = [
   {
     path: 'exercice-text-interpolation',
     loadComponent: () =>
@@ -8,4 +8,4 @@ export default [
         (m) => m.ExerciceTextInterpolation,
       ),
   },
-] satisfies Routes;
+];
