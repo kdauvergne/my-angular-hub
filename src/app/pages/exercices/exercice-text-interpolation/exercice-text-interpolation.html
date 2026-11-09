@@ -46,11 +46,13 @@
               <span>{{ user.role }}</span>
             </li>
             <li>
-              <strong>Nom complet : (méthode) </strong><span>{{ getFullName() }}</span>
+              <strong>Nom complet : (méthode) </strong><span>{{ user.getFullName() }}</span>
             </li>
             <li>
               <strong>Statut : </strong>
-              <span class="badge badge-error">{{ isLoggedIn ? 'Connecté' : 'Déconnecté' }} </span>
+              <span class="badge {{ user.isLoggedIn ? 'badge-success' : 'badge-error' }}"
+                >{{ user.isLoggedIn ? 'Connecté' : 'Déconnecté' }}
+              </span>
             </li>
           </ul>
         </div>

@@ -4,6 +4,8 @@ interface Users {
   firstName: string;
   lastName: string;
   role: string;
+  isLoggedIn: boolean;
+  getFullName: () => string;
 }
 
 @Component({
@@ -22,13 +24,11 @@ export class ExerciceTextInterpolation {
     firstName: 'Alexandre',
     lastName: 'DUPONT',
     role: 'DEV',
+    isLoggedIn: false,
+    getFullName: function (): string {
+      return `${this.firstName} ${this.lastName}`;
+    },
   };
-
-  isLoggedIn: boolean = false;
-
-  getFullName(): string {
-    return `${this.user.firstName} ${this.user.lastName}`;
-  }
 
   skills: string[] = ['Angular 22', 'TypeScript', 'DaisyUI'];
 }
