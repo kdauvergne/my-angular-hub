@@ -8,4 +8,11 @@ export const LESSONS_ROUTES: Routes = [
         (m) => m.TextInterpolationLesson,
       ),
   },
+  {
+    path: 'attribute-binding-lesson',
+    loadComponent: () =>
+      import('./attributes-binding-lesson/attributes-binding-lesson').then(
+        (m) => m.AttributesBindingLesson,
+      ),
+  },
 ];
