@@ -1,0 +1,91 @@
+<div class="max-w-5xl mx-auto my-10 space-y-8 p-4">
+  <!-- Titre principal -->
+  <div class="text-center space-y-2">
+    <h1 class="text-4xl font-extrabold text-primary">{{ title }}</h1>
+    <p class="text-base-content/70 text-lg">{{ description }}</p>
+  </div>
+
+<!-- Exemple 1 : Usage simple -->
+<div class="card bg-base-200 shadow-xl border border-base-300">
+  <div class="card-body">
+    <h2 class="card-title text-secondary">✨ 1. Interpolation basique</h2>
+    <p class="text-sm text-base-content/70">
+      Injecte directement une propriété TypeScript dans le HTML avec la double accolade <code ngNonBindable>{{ }}</code>.
+    </p>
+
+    <!-- Code mis en valeur par Shiki -->
+    <div class="rounded-xl overflow-hidden my-2 border border-base-300 p-4 text-xs font-mono bg-[#1e1e1e]" [innerHTML]="codeSimpleHtml()"></div>
+
+    <div class="bg-base-100 p-4 rounded-lg border border-base-300">
+      <span class="text-xs font-bold uppercase text-base-content/50 block mb-1">Rendu visuel :</span>
+      <p>Bonjour, <span class="font-bold text-primary">{{ username }}</span> !</p>
+    </div>
+  </div>
+</div>
+
+  <!-- Exemple 2 : Accès aux objets -->
+  <div class="card bg-base-200 shadow-xl border border-base-300">
+    <div class="card-body">
+      <h2 class="card-title text-secondary">🔍 2. Accès aux objets et propriétés</h2>
+      <p class="text-sm text-base-content/70">
+        Il est possible de naviguer dans les objets avec la notation pointée ou avec les crochets.
+      </p>
+
+      <!-- Code mis en valeur par Shiki -->
+      <div class="rounded-xl overflow-hidden my-2 border border-base-300 p-4 text-xs font-mono bg-[#1e1e1e]" [innerHTML]="codeObjectHtml()"></div>
+
+      <div class="bg-base-100 p-4 rounded-lg border border-base-300 space-y-1">
+        <span class="text-xs font-bold uppercase text-base-content/50 block mb-1">Rendu visuel :</span>
+        <p>Lecture via point : <span class="badge badge-accent">{{ hobbies.reading }}</span></p>
+        <p>Lecture via clé : <span class="badge badge-accent">{{ hobbies['reading'] }}</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exemple 3 : Expressions JavaScript & Méthodes -->
+  <div class="card bg-base-200 shadow-xl border border-base-300">
+    <div class="card-body">
+      <h2 class="card-title text-secondary">⚡ 3. Calculs, ternaires et méthodes</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <div class="rounded-xl overflow-hidden my-2 border border-base-300 p-4 text-xs font-mono bg-[#1e1e1e]" [innerHTML]="codeCalculHtml()"></div>
+          <div class="bg-base-100 p-3 rounded-lg border border-base-300 text-sm">
+            Résultat : <strong>{{ 10 + 20 }}</strong>
+          </div>
+        </div>
+
+        <div>
+          <div class="rounded-xl overflow-hidden my-2 border border-base-300 p-4 text-xs font-mono bg-[#1e1e1e]" [innerHTML]="codeTernaireHtml()"></div>
+          <div class="bg-base-100 p-3 rounded-lg border border-base-300 text-sm">
+            Résultat : <strong>{{ username === 'John Doe' ? 'Générique' : 'Spécifique' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-xl overflow-hidden my-2 border border-base-300 p-4 text-xs font-mono bg-[#1e1e1e]" [innerHTML]="codeMethodHtml()"></div>
+      <div class="bg-base-100 p-3 rounded-lg border border-base-300 text-sm">
+        Résultat : <strong>{{ getWelcomeMessage() }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exemple 4 : Sécurité XSS -->
+  <div class="alert alert-info shadow-lg">
+    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12A9 9 0 1 1 3 12a9 9 0 0 1 18 0z" />
+    </svg>
+    <div class="w-full">
+      <h3 class="font-bold">🛡️ Protection XSS automatique</h3>
+      <p class="text-xs mt-1">
+        Angular neutralise automatiquement le HTML/JS injecté dans l'interpolation en le convertissant en texte brut :
+      </p>
+
+      <div class="rounded-xl overflow-hidden my-2 border border-base-300 p-4 text-xs font-mono bg-[#1e1e1e]" [innerHTML]="codeXssHtml()"></div>
+
+      <div class="bg-base-100 text-base-content p-3 rounded-lg border border-base-300 font-mono text-xs">
+        Rendu sécurisé : {{ xss }}
+      </div>
+    </div>
+  </div>
+</div>
