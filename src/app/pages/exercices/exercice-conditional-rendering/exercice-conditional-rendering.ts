@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { NgIf } from '@angular/common';
 
 @Component({
-  imports: [NgIf],
+  imports: [],
   selector: 'app-exercice-conditional-rendering',
 
   templateUrl: './exercice-conditional-rendering.html',

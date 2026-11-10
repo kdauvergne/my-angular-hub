@@ -21,9 +21,11 @@
       <!-- <p>
         {{ listFriendsCreationStatus }}
       </p> -->
-      <p *ngIf="listFriendsAuth; else failTemplate">🥳🥳🥳 Votre ami a été ajouté !</p>
-
-      <ng-template #failTemplate><p>🥶🥶🥶 Aucun ami ...</p></ng-template>
+      @if (listFriendsAuth) {
+        <p>🥳🥳🥳 Votre ami a été ajouté !</p>
+      } @else {
+        <p>🥶🥶🥶 Aucun ami ...</p>
+      }
       <button class="btn btn-primary" (click)="onAddingFriends()" [disabled]="listFriendsAuth">
         Ajouter un ami
       </button>
