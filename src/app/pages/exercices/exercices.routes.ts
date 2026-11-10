@@ -8,4 +8,11 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceTextInterpolation,
       ),
   },
+  {
+    path: 'exercice-attribute-binding',
+    loadComponent: () =>
+      import('./exercice-attribute-binding/exercice-attribute-binding').then(
+        (m) => m.ExerciceAttributeBinding,
+      ),
+  },
 ];

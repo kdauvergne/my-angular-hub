@@ -1,0 +1,27 @@
+<div class="card bg-base-100 w-full max-w-sm shadow-sm mx-auto my-10">
+  <figure class="aspect-4/3">
+    <img
+      class="w-full h-full object-cover object-top"
+      [src]="oneFriend.imgurl"
+      [alt]="oneFriend.name"
+    />
+  </figure>
+  <div class="card-body">
+    <h2 class="card-title">{{ oneFriend.name }}</h2>
+    <ul>
+      <li>
+        <span class="font-bold">Status : </span><span>{{ getOneFriendStatus() }}</span>
+      </li>
+      <li>
+        <span class="font-bold">Age : </span><span>{{ oneFriend.age }}</span>
+      </li>
+      <li>
+        <span class="font-bold">Bio : </span><span>{{ oneFriend.bio }}</span>
+      </li>
+      <li>
+        <span class="font-bold">Reputation : </span
+        ><span>{{ oneFriend.status ? 'Queen' : 'Ringarde' }}</span>
+      </li>
+    </ul>
+  </div>
+</div>
