@@ -9,12 +9,18 @@ export const routes: Routes = [
   },
   {
     path: 'lessons',
-    loadChildren: () =>
-      import('./pages/lessons/lessons.routes').then((m) => m.LESSONS_ROUTES),
+    loadChildren: () => import('./pages/lessons/lessons.routes').then((m) => m.LESSONS_ROUTES),
   },
   {
     path: 'exercices',
     loadChildren: () =>
       import('./pages/exercices/exercices.routes').then((m) => m.EXERCICES_ROUTES),
+  },
+
+  // ! Page not found
+
+  {
+    path: '**',
+    loadComponent: () => import('./shared/not-found/not-found').then((m) => m.NotFound),
   },
 ];
