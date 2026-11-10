@@ -1,0 +1,181 @@
+<div class="max-w-6xl mx-auto my-10 space-y-10 p-4">
+  <!-- 🟦 En-tête -->
+  <div class="text-center space-y-2">
+    <h1 class="text-4xl font-extrabold text-primary">🏗️ Architecture MVVM & Two-Way Binding</h1>
+    <p class="text-lg text-base-content/70 max-w-3xl mx-auto">
+      Comprendre comment Angular synchronise la logique métier et l'interface utilisateur grâce au
+      motif <strong>MVVM</strong> et à la directive <code>[(ngModel)]</code>.
+    </p>
+  </div>
+
+  <!-- 💡 Alert Près-requis : FormsModule -->
+  <div class="alert alert-warning shadow-lg">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      class="stroke-current shrink-0 w-6 h-6"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+      ></path>
+    </svg>
+    <div class="w-full">
+      <h3 class="font-bold">Prérequis indispensable</h3>
+      <p class="text-xs mt-1 mb-2">
+        Le Two-Way binding avec <code ngNonBindable>[(ngModel)]</code> requiert l'importation de
+        <strong>FormsModule</strong> dans le tableau <code ngNonBindable>imports</code> de votre
+        composant :
+      </p>
+      <div
+        class="rounded-lg overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-3! [&>pre]:m-0! [&>pre]:overflow-x-auto"
+        [innerHTML]="codeFormsModule | shiki: 'typescript' : 'vitesse-dark' | async"
+      ></div>
+    </div>
+  </div>
+
+  <!-- 🟥 SECTION 1 : THÉORIE (MVC vs MVVM) -->
+  <section class="space-y-6">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">🏛️</span> Du MVC au MVVM
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Carte MVC -->
+      <div class="card bg-base-100 shadow-xl border-t-4 border-error border-x border-b">
+        <div class="card-body">
+          <h3 class="card-title text-error">Pattern MVC (Traditionnel)</h3>
+          <p class="text-xs opacity-70">Model - View - Controller</p>
+          <ul class="list-disc list-inside space-y-2 text-sm text-base-content/80 mt-2">
+            <li>Le <strong>Contrôleur</strong> intercepte les événements de l'utilisateur.</li>
+            <li>Il met à jour manuellement le <strong>Modèle</strong>.</li>
+            <li>Il doit redemander explicitement le rafraîchissement du DOM.</li>
+            <li class="text-error font-semibold mt-2">
+              Inconvénient : Manipulation verbeuse du DOM.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Carte MVVM -->
+      <div class="card bg-base-100 shadow-xl border-t-4 border-success border-x border-b">
+        <div class="card-body">
+          <h3 class="card-title text-success">Pattern MVVM (Façon Angular)</h3>
+          <p class="text-xs opacity-70">Model - View - ViewModel</p>
+          <ul class="list-disc list-inside space-y-2 text-sm text-base-content/80 mt-2">
+            <li><strong>Model :</strong> Données brutes de l'application (API / Services).</li>
+            <li><strong>View :</strong> Le template HTML de votre composant.</li>
+            <li><strong>ViewModel :</strong> La classe TypeScript liant la vue et le modèle.</li>
+            <li class="text-success font-semibold mt-2">
+              Avantage : La synchronisation est 100 % automatique !
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🟩 SECTION 2 : PRATIQUE (Two-Way Binding) -->
+  <section class="space-y-6">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">🔄</span> Le Two-Way Binding en action
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <!-- Colonne Formulaire (La Vue qui modifie le TS) -->
+      <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-4">
+          <h3 class="card-title text-secondary">1. Formulaire (Interface Vue)</h3>
+          <p class="text-sm text-base-content/70">
+            Modifier ces champs met à jour l'état du ViewModel en temps réel.
+          </p>
+
+          <div class="form-control w-full space-y-1">
+            <label class="label"
+              ><span class="label-text font-bold">Nom du développeur</span></label
+            >
+            <input
+              type="text"
+              [(ngModel)]="developerName"
+              placeholder="Entrez un nom"
+              class="input input-bordered input-primary w-full"
+            />
+          </div>
+
+          <div class="form-control w-full space-y-1">
+            <label class="label"><span class="label-text font-bold">Langage favori</span></label>
+            <input
+              type="text"
+              [(ngModel)]="favoriteLanguage"
+              placeholder="Ex: TypeScript"
+              class="input input-bordered input-primary w-full"
+            />
+          </div>
+
+          <div class="pt-2">
+            <button class="btn btn-outline btn-warning w-full" (click)="resetData()">
+              🔄 Réinitialiser depuis le TypeScript
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colonne Résultat (Le TS reflété dans la Vue) -->
+      <div class="space-y-4">
+        <!-- Inspection d'état -->
+        <div class="card bg-base-100 shadow-xl border border-base-300">
+          <div class="card-body">
+            <h3 class="card-title text-accent">2. État du ViewModel (Classe TS)</h3>
+            <p class="text-sm text-base-content/70 mb-2">
+              Valeurs stockées en mémoire dans le composant :
+            </p>
+
+            <div
+              class="bg-base-200 p-4 rounded-lg font-mono text-sm space-y-2 border border-base-300"
+            >
+              <p>
+                developerName : <span class="text-primary font-bold">"{{ developerName }}"</span>
+              </p>
+              <p>
+                favoriteLanguage :
+                <span class="text-accent font-bold">"{{ favoriteLanguage }}"</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explication "Banana in a Box" -->
+        <div class="card bg-base-200 shadow-lg border border-base-300">
+          <div class="card-body space-y-3">
+            <h4 class="font-bold text-base flex items-center gap-2">
+              <span>🍌</span> "Banana in a Box" : <code class="text-sm">[(ngModel)]</code>
+            </h4>
+            <p class="text-xs text-base-content/70">
+              La syntaxe <code ngNonBindable>[()]</code> combine la parenthèse (Event) dans le
+              crochet (Property) :
+            </p>
+
+            <ul class="text-xs space-y-1 text-base-content/80">
+              <li>
+                🟦 <strong>[ngModel]</strong> : Property Binding (Met à jour le champ si le TS
+                change).
+              </li>
+              <li>
+                🟧 <strong>(ngModelChange)</strong> : Event Binding (Met à jour le TS si le champ
+                change).
+              </li>
+            </ul>
+
+            <div
+              class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre] :p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+              [innerHTML]="codeUnderTheHood | shiki: 'html' : 'vitesse-dark' | async"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

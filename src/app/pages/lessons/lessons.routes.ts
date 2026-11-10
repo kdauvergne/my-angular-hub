@@ -15,4 +15,9 @@ export const LESSONS_ROUTES: Routes = [
         (m) => m.AttributesBindingLesson,
       ),
   },
+  {
+    path: 'two-way-binding-lesson',
+    loadComponent: () =>
+      import('./two-way-binding-lesson/two-way-binding-lesson').then((m) => m.TwoWayBindingLesson),
+  },
 ];
