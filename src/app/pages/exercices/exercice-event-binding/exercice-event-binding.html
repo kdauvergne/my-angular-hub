@@ -1,0 +1,29 @@
+<div class="max-w-6xl mx-auto my-10 space-y-10 p-4">
+  <div class="text-center space-y-2">
+    <h1 class="text-4xl font-bold text-primary">
+      List Friends <span class="text-secondary font-semibold text-3xl">(Event Binding)</span>
+    </h1>
+  </div>
+
+  <div class="card bg-base-100 shadow-xl border border-base-300 max-w-3xl mx-auto">
+    <div class="card-body space-y-4">
+      <label class="label"><span class="label-text font-bold">Nom de l'ami</span></label>
+      <input
+        type="text"
+        (input)="onUpdateFriendsList($event)"
+        placeholder="Entrez un nom"
+        class="input input-bordered input-primary w-full"
+      />
+      <p>
+        Nom de l'ami : <span>{{ listFriendsInputText }}</span>
+      </p>
+      <p>
+        {{ listFriendsCreationStatus }}
+      </p>
+
+      <button class="btn btn-primary" (click)="onAddingFriends()" [disabled]="listFriendsAuth">
+        Ajouter un ami
+      </button>
+    </div>
+  </div>
+</div>

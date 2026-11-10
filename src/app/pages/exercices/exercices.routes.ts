@@ -15,4 +15,9 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceAttributeBinding,
       ),
   },
+  {
+    path: 'exercice-event-binding',
+    loadComponent: () =>
+      import('./exercice-event-binding/exercice-event-binding').then((m) => m.ExerciceEventBinding),
+  },
 ];
