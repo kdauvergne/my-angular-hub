@@ -27,4 +27,11 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceConditionalRendering,
       ),
   },
+  {
+    path: 'exercice-two-way-binding',
+    loadComponent: () =>
+      import('./exercice-two-way-binding/exercice-two-way-binding').then(
+        (m) => m.ExerciceTwoWayBinding,
+      ),
+  },
 ];
