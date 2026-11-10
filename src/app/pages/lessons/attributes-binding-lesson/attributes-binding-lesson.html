@@ -1,95 +1,149 @@
-<div class="container mx-auto my-8 space-y-8">
+<div class="max-w-5xl mx-auto my-10 space-y-8 p-4">
   <!-- 🟦 Introduction -->
-  <div class="card bg-base-200 shadow-xl">
+  <div class="card bg-base-200 shadow-xl border border-base-300">
     <div class="card-body">
-      <h2 class="card-title text-primary text-2xl">🔗 Property Binding & Attribute Binding</h2>
-      <p>
-        Angular permet de lier des données du composant à des éléments HTML.
-        Deux grandes familles :
+      <h2 class="card-title text-primary text-2xl">🔗 Property Binding vs Attribute Binding</h2>
+      <p class="text-base-content/80">
+        Angular permet de lier dynamiquement les données du composant au template HTML via deux
+        approches distinctes :
       </p>
-      <ul class="list-disc list-inside">
-        <li><strong>Property Binding</strong> : liaison à une propriété DOM.</li>
-        <li><strong>Attribute Binding</strong> : liaison à un attribut HTML standard ou custom.</li>
+      <ul class="list-disc list-inside space-y-1 text-sm text-base-content/70">
+        <li>
+          <strong>Property Binding <code ngNonBindable>[property]="valeur"</code></strong> : modifie
+          directement la propriété de l'objet DOM (recommandé et plus performant).
+        </li>
+        <li>
+          <strong>Attribute Binding <code ngNonBindable>[attr.attribut]="valeur"</code></strong> :
+          modifie l'attribut du HTML rendu (pour ARIA, SVG, ou attributs de données personnalisés).
+        </li>
       </ul>
-      <p class="mt-2">Syntaxe commune : <code class="badge badge-outline">[property]="expression"</code> ou <code class="badge badge-outline">[attr.attribut]="expression"</code>.</p>
     </div>
   </div>
 
-  <!-- 🟩 Property Binding -->
-  <div class="card bg-base-100 shadow-lg">
-    <div class="card-body">
-      <h3 class="text-lg font-bold">1️⃣ Exemple : Property Binding</h3>
+  <!-- 🟩 Section 1 : Property Binding -->
+  <div class="card bg-base-100 shadow-xl border border-base-300">
+    <div class="card-body space-y-6">
+      <h3 class="card-title text-secondary text-xl">1️⃣ Property Binding (DOM)</h3>
 
-      <div class="flex flex-col lg:flex-row items-center gap-6">
-        <!-- Image avec [src] -->
-        <img [src]="imageUrl" alt="Image property binding" class="rounded-lg shadow-md w-72" />
-        <div>
-          <p class="text-sm opacity-70">
-            Code : <code>&lt;img [src]="imageUrl"&gt;</code>
+      <!-- Exemple 1 : [src] sur img -->
+      <div class="space-y-3">
+        <h4 class="font-semibold text-sm text-base-content/80">
+          A. Liaison d'image avec <code class="badge badge-sm badge-ghost">[src]</code>
+        </h4>
+
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] my-2 text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="codeImgProperty | shiki: 'html' : 'vitesse-dark' | async"
+        ></div>
+
+        <div class="bg-base-200 p-4 rounded-lg border border-base-300 flex items-center gap-4">
+          <img [src]="imageUrl" alt="Image property binding" class="rounded-lg shadow w-48" />
+          <p class="text-xs text-base-content/70">
+            Source actuelle : <span class="font-mono text-primary">{{ imageUrl }}</span>
           </p>
+        </div>
+      </div>
 
-          <!-- Bouton disabled -->
-          <button class="btn btn-secondary mr-2" [disabled]="buttonDisabled">
-            Bouton avec [disabled]
+      <!-- Exemple 2 : [disabled] sur bouton -->
+      <div class="space-y-3">
+        <h4 class="font-semibold text-sm text-base-content/80">
+          B. Désactivation conditionnelle avec
+          <code class="badge badge-sm badge-ghost">[disabled]</code>
+        </h4>
+
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] my-2 text-xs font-mono [&>pre] :p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="codeButtonDisabled | shiki: 'html' : 'vitesse-dark' | async"
+        ></div>
+
+        <div class="bg-base-200 p-4 rounded-lg border border-base-300 flex items-center gap-4">
+          <button class="btn btn-secondary btn-sm" [disabled]="buttonDisabled">
+            Bouton cible ({{ buttonDisabled ? 'Désactivé' : 'Actif' }})
           </button>
-          <button class="btn btn-outline mt-2" (click)="toggleButton()">
-            Basculer état du bouton
-          </button>
+          <button class="btn btn-outline btn-sm" (click)="toggleButton()">Inverser l'état</button>
+        </div>
+      </div>
 
-          <p class="text-sm opacity-70 mt-2">
-            Code : <code>&lt;button [disabled]="buttonDisabled"&gt;</code>
-          </p>
+      <!-- Exemple 3 : [placeholder] sur input -->
+      <div class="space-y-3">
+        <h4 class="font-semibold text-sm text-base-content/80">
+          C. Textes indicatifs avec <code class="badge badge-sm badge-ghost">[placeholder]</code>
+        </h4>
 
-          <!-- Input avec [placeholder] -->
-          <input class="input input-bordered mt-2 w-full" [placeholder]="inputPlaceholder" />
-          <p class="text-sm opacity-70 mt-2">
-            Code : <code>&lt;input [placeholder]="inputPlaceholder"&gt;</code>
-          </p>
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] my-2 text-xs font-mono [&>pre] :p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="codeInputPlaceholder | shiki: 'html' : 'vitesse-dark' | async"
+        ></div>
+
+        <div class="bg-base-200 p-4 rounded-lg border border-base-300">
+          <input class="input input-bordered w-full max-w-md" [placeholder]="inputPlaceholder" />
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 🟧 Attribute Binding -->
-  <div class="card bg-base-100 shadow-lg">
-    <div class="card-body">
-      <h3 class="text-lg font-bold">2️⃣ Exemple : Attribute Binding</h3>
-
-      <p class="mb-4">
-        Certains attributs HTML n’ont pas de propriétés DOM correspondantes ou sont custom.
-        Dans ce cas, on utilise <code>[attr.attribut]</code>.
+  <!-- 🟧 Section 2 : Attribute Binding -->
+  <div class="card bg-base-100 shadow-xl border border-base-300">
+    <div class="card-body space-y-4">
+      <h3 class="card-title text-accent text-xl">
+        2️⃣ Attribute Binding (HTML / Accessibilité / Data)
+      </h3>
+      <p class="text-sm text-base-content/70">
+        Si l'élément HTML ne possède pas de propriété DOM équivalente (ex: attributs d'accessibilité
+        ARIA ou attributs <code ngNonBindable>data-*</code>), il faut utiliser le préfixe
+        <code ngNonBindable>[attr.]</code>.
       </p>
 
-      <button
-        class="btn btn-primary mr-2"
-        [attr.aria-label]="ariaLabel"
-        [attr.data-custom]="customAttr">
-        Bouton avec attributs dynamiques
-      </button>
+      <div
+        class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] my-2 text-xs font-mono [&>pre] :p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+        [innerHTML]="codeAttributeBinding | shiki: 'html' : 'vitesse-dark' | async"
+      ></div>
 
-      <p class="text-sm opacity-70 mt-2">
-        Code : <code>&lt;button [attr.aria-label]="ariaLabel" [attr.data-custom]="customAttr"&gt;</code>
-      </p>
+      <div class="bg-base-200 p-4 rounded-lg border border-base-300 space-y-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block"
+          >Rendu visuel :</span
+        >
+        <button
+          class="btn btn-primary"
+          [attr.aria-label]="ariaLabel"
+          [attr.data-custom]="customAttr"
+        >
+          Bouton avec attributs dynamiques
+        </button>
+        <p class="text-xs font-mono text-base-content/60 mt-1">
+          aria-label="{{ ariaLabel }}" | data-custom="{{ customAttr }}"
+        </p>
+      </div>
     </div>
   </div>
 
-  <!-- 🟨 Différences expliquées -->
-  <div class="alert alert-info">
-    <h4 class="font-bold">💡 Différence Property vs Attribute Binding</h4>
-    <ul class="list-disc list-inside">
-      <li><strong>Property Binding</strong> agit sur l’objet DOM directement → plus performant, recommandé.</li>
-      <li><strong>Attribute Binding</strong> agit sur l’attribut HTML → utile pour aria-* ou data-*.</li>
-      <li>Si possible, privilégier Property Binding.</li>
-    </ul>
-  </div>
+  <!-- 💡 Recap & Bonnes pratiques -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="alert alert-info shadow-md">
+      <div>
+        <h4 class="font-bold text-sm">💡 Quand utiliser quoi ?</h4>
+        <ul class="text-xs list-disc list-inside mt-1 space-y-1">
+          <li>
+            <strong>Property :</strong> Propriétés standards (<code ngNonBindable>[src]</code>,
+            <code ngNonBindable>[disabled]</code>, <code ngNonBindable>[value]</code>).
+          </li>
+          <li>
+            <strong>Attribute :</strong> Attributs spécifiques (<code ngNonBindable
+              >[attr.aria-*]</code
+            >, <code ngNonBindable>[attr.colspan]</code>, <code ngNonBindable>[attr.data-*]</code>).
+          </li>
+        </ul>
+      </div>
+    </div>
 
-  <!-- 🟩 Bonnes pratiques -->
-  <div class="alert alert-success">
-    <h4 class="font-bold">✅ Bonnes pratiques</h4>
-    <ul class="list-disc list-inside">
-      <li>Préparer vos variables dans le .ts pour ne pas surcharger le template.</li>
-      <!-- <li>Utiliser <code>[disabled]</code> plutôt que <code>disabled="{{variable}}"</code>.</li> -->
-      <li>Pour les attributs spéciaux, utiliser <code>[attr.nom]</code>.</li>
-    </ul>
+    <div class="alert alert-success shadow-md">
+      <div>
+        <h4 class="font-bold text-sm">✅ Règle d'or</h4>
+        <p class="text-xs mt-1">
+          Privilégier systématiquement le <strong>Property Binding</strong> lorsqu'une propriété DOM
+          existe, car Angular met à jour directement le nœud du DOM sans ré-analyser l'arbre HTML.
+        </p>
+      </div>
+    </div>
   </div>
 </div>
