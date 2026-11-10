@@ -10,7 +10,8 @@
     <h2 class="card-title">{{ oneFriend.name }}</h2>
     <ul>
       <li>
-        <span class="font-bold">Status : </span><span>{{ getOneFriendStatus() }}</span>
+        <span class="font-bold">Status : </span
+        ><span>{{ oneFriend.getOneFriendStatus() ? 'Online' : 'Offline' }}</span>
       </li>
       <li>
         <span class="font-bold">Age : </span><span>{{ oneFriend.age }}</span>
