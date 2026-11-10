@@ -20,4 +20,11 @@ export const LESSONS_ROUTES: Routes = [
     loadComponent: () =>
       import('./two-way-binding-lesson/two-way-binding-lesson').then((m) => m.TwoWayBindingLesson),
   },
+  {
+    path: 'conditional-rendering-lesson',
+    loadComponent: () =>
+      import('./conditional-rendering-lesson/conditional-rendering-lesson').then(
+        (m) => m.ConditionalRenderingLesson,
+      ),
+  },
 ];
