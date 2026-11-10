@@ -20,4 +20,11 @@ export const EXERCICES_ROUTES: Routes = [
     loadComponent: () =>
       import('./exercice-event-binding/exercice-event-binding').then((m) => m.ExerciceEventBinding),
   },
+  {
+    path: 'exercice-conditional-rendering',
+    loadComponent: () =>
+      import('./exercice-conditional-rendering/exercice-conditional-rendering').then(
+        (m) => m.ExerciceConditionalRendering,
+      ),
+  },
 ];
