@@ -1,10 +1,9 @@
-import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FriendCard } from '../../../components/friend-card/friend-card';
 
 @Component({
-  imports: [FormsModule, FriendCard, NgFor],
+  imports: [FormsModule, FriendCard],
   selector: 'app-exercice-list-rendering',
   styleUrl: './exercice-list-rendering.css',
   templateUrl: './exercice-list-rendering.html',
