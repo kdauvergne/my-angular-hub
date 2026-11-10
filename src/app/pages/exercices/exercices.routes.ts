@@ -34,4 +34,11 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceTwoWayBinding,
       ),
   },
+  {
+    path: 'exercice-list-rendering',
+    loadComponent: () =>
+      import('./exercice-list-rendering/exercice-list-rendering').then(
+        (m) => m.ExerciceListRendering,
+      ),
+  },
 ];

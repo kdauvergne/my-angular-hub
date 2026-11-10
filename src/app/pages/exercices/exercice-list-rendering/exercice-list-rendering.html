@@ -1,0 +1,19 @@
+<div class="max-w-6xl mx-auto my-10 p-4 space-y-10">
+  <div class="join w-full max-w-xl mx-auto flex">
+    <input
+      type="text"
+      class="input join-item w-full"
+      placeholder="Nom du pote"
+      [(ngModel)]="inputNameFriend"
+    />
+    <button type="button" class="btn btn-primary join-item" (click)="addAFriend()">
+      + Ajouter un pote
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (user of userProfiles; track user.id) {
+      <app-friend-card />
+    }
+  </div>
+</div>
