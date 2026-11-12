@@ -55,4 +55,10 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceDynamicStyling,
       ),
   },
+  {
+    path: 'exercice-signals',
+    title: 'Signals',
+    loadComponent: () =>
+      import('./exercice-signals/exercice-signals').then((m) => m.ExerciceSignals),
+  },
 ];
