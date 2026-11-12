@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 export const EXERCICES_ROUTES: Routes = [
   {
     path: 'exercice-text-interpolation',
+    title: 'Text interpolation',
     loadComponent: () =>
       import('./exercice-text-interpolation/exercice-text-interpolation').then(
         (m) => m.ExerciceTextInterpolation,
@@ -10,6 +11,7 @@ export const EXERCICES_ROUTES: Routes = [
   },
   {
     path: 'exercice-attribute-binding',
+    title: 'Attribute binding',
     loadComponent: () =>
       import('./exercice-attribute-binding/exercice-attribute-binding').then(
         (m) => m.ExerciceAttributeBinding,
@@ -17,11 +19,13 @@ export const EXERCICES_ROUTES: Routes = [
   },
   {
     path: 'exercice-event-binding',
+    title: 'Event binding',
     loadComponent: () =>
       import('./exercice-event-binding/exercice-event-binding').then((m) => m.ExerciceEventBinding),
   },
   {
     path: 'exercice-conditional-rendering',
+    title: 'Conditional rendering',
     loadComponent: () =>
       import('./exercice-conditional-rendering/exercice-conditional-rendering').then(
         (m) => m.ExerciceConditionalRendering,
@@ -29,6 +33,7 @@ export const EXERCICES_ROUTES: Routes = [
   },
   {
     path: 'exercice-two-way-binding',
+    title: 'Two way binding',
     loadComponent: () =>
       import('./exercice-two-way-binding/exercice-two-way-binding').then(
         (m) => m.ExerciceTwoWayBinding,
@@ -36,6 +41,7 @@ export const EXERCICES_ROUTES: Routes = [
   },
   {
     path: 'exercice-list-rendering',
+    title: 'List rendering',
     loadComponent: () =>
       import('./exercice-list-rendering/exercice-list-rendering').then(
         (m) => m.ExerciceListRendering,

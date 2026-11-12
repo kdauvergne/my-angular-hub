@@ -24,13 +24,28 @@
       >
         <li><a routerLink="/home">Accueil</a></li>
         <li>
-          <a>Parent</a>
+          <a>Leçons</a>
           <ul class="p-2">
-            <li><a>Submenu 1</a></li>
-            <li><a>Submenu 2</a></li>
+            @for (route of lessons; track route.path) {
+              <li><a [routerLink]="['/lessons', route.path]">{{ route.title }}</a></li>
+            }
           </ul>
         </li>
-        <li><a>Item 3</a></li>
+        <li>
+          <a>Exercices</a>
+          <ul class="p-2">
+            @for (route of exercices; track route.path) {
+              <li><a [routerLink]="['/exercices', route.path]">{{ route.title }}</a></li>
+            }
+          </ul>
+        </li>
+        <li>
+          <a>TP</a>
+          <ul class="p-2">
+            <li><a>TP 1</a></li>
+            <li><a>TP 2</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
     <a routerLink="/home" class="btn btn-ghost text-xl">My Angular Hub</a>
@@ -44,11 +59,9 @@
           tabindex="-1"
           class="dropdown-content ms-0 bg-base-100 rounded-box z-1 w-max min-w-40 p-2 shadow"
         >
-          <li><a routerLink="/lessons/text-interpolation-lesson">Interpolation de texte</a></li>
-          <li><a routerLink="/lessons/attribute-binding-lesson">Attribute binding</a></li>
-          <li><a routerLink="/lessons/two-way-binding-lesson">Two way binding</a></li>
-          <li><a routerLink="/lessons/conditional-rendering-lesson">Rendu conditionnel</a></li>
-          <li><a routerLink="/lessons/list-rendering-lesson">Rendu de listes</a></li>
+          @for (route of lessons; track route.path) {
+            <li><a [routerLink]="['/lessons', route.path]">{{ route.title }}</a></li>
+          }
         </ul>
       </li>
       <li class="dropdown">
@@ -57,14 +70,9 @@
           tabindex="-1"
           class="dropdown-content ms-0 bg-base-100 rounded-box z-1 w-max min-w-40 p-2 shadow"
         >
-          <li><a routerLink="/exercices/exercice-text-interpolation">Interpolation de texte</a></li>
-          <li><a routerLink="/exercices/exercice-attribute-binding">Attribute binding</a></li>
-          <li><a routerLink="/exercices/exercice-event-binding">Event binding</a></li>
-          <li>
-            <a routerLink="/exercices/exercice-conditional-rendering">Conditional rendering</a>
-          </li>
-          <li><a routerLink="/exercices/exercice-two-way-binding">Two way binding</a></li>
-          <li><a routerLink="/exercices/exercice-list-rendering">List rendering</a></li>
+          @for (route of exercices; track route.path) {
+            <li><a [routerLink]="['/exercices', route.path]">{{ route.title }}</a></li>
+          }
         </ul>
       </li>
       <li class="dropdown">

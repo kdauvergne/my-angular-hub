@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Route, RouterLink } from '@angular/router';
+import { EXERCICES_ROUTES } from '../../../pages/exercices/exercices.routes';
+import { LESSONS_ROUTES } from '../../../pages/lessons/lessons.routes';
 
 @Component({
   imports: [RouterLink],
@@ -7,4 +9,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './header.css',
   templateUrl: './header.html',
 })
-export class Header {}
+export class Header {
+  lessons: Route[] = LESSONS_ROUTES;
+  exercices: Route[] = EXERCICES_ROUTES;
+}
