@@ -75,10 +75,10 @@
 
         <!-- Démo dynamique avec @for -->
         <div class="space-y-2 min-h-52 p-3 bg-base-200 rounded-lg border border-base-300">
-          @for (item of items(); track item.id) {
+          @for (item of items(); track item.id; let idx = $index) {
             <div class="flex justify-between items-center p-3 bg-base-100 rounded-lg shadow-sm border border-base-300">
               <div>
-                <span class="font-bold text-sm">{{ item.name }}</span>
+                <span class="font-bold text-sm">{{ idx }}-{{ item.name }}</span>
                 <span class="badge badge-sm badge-ghost ml-2">{{ item.category }}</span>
               </div>
               <button class="btn btn-xs btn-circle btn-error btn-outline" (click)="removeItem(item.id)">✕</button>
