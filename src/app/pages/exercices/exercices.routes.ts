@@ -47,4 +47,12 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceListRendering,
       ),
   },
+  {
+    path: 'exercice-dynamic-styling',
+    title: 'Dynamic styling',
+    loadComponent: () =>
+      import('./exercice-dynamic-styling/exercice-dynamic-styling').then(
+        (m) => m.ExerciceDynamicStyling,
+      ),
+  },
 ];

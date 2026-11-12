@@ -1,0 +1,97 @@
+<div class="max-w-6xl mx-auto my-10 p-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+    <div class="card bg-base-100 shadow-sm" [ngClass]="{ old: oneFriend.age >= 30 }">
+      <figure class="aspect-4/3">
+        <img
+          class="w-full h-full object-cover object-top"
+          [src]="oneFriend.imgurl"
+          [alt]="oneFriend.name"
+        />
+      </figure>
+      <div class="card-body">
+        <h2 class="card-title text-primary">{{ oneFriend.name }}</h2>
+        <ul class="space-y-2">
+          <li>
+            <span
+              class="font-bold"
+              [ngStyle]="{ color: oneFriend.status === 'Offline' ? 'red' : 'green' }"
+              >Status : </span
+            ><span>{{ oneFriend.getOneFriendStatus() }}</span>
+          </li>
+          <li>
+            <span class="font-bold">Âge : </span><span>{{ oneFriend.age }}</span>
+          </li>
+          <li>
+            <span class="font-bold">Bio : </span><span>{{ oneFriend.bio }}</span>
+          </li>
+          <li>
+            <span class="font-bold">Réputation : </span
+            ><span>{{ oneFriend.status === 'Online' ? 'Queen' : 'Offline' }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-sm md:col-span-2">
+      <div class="card-body">
+        <h2 class="card-title text-primary">Éditer les informations de {{ oneFriend.name }}</h2>
+
+        <form>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Nom</legend>
+            <input
+              type="text"
+              class="input w-full"
+              name="friendName"
+              [(ngModel)]="oneFriend.name"
+            />
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Âge</legend>
+            <input
+              type="number"
+              class="input w-full"
+              name="friendAge"
+              [(ngModel)]="oneFriend.age"
+            />
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Status</legend>
+            <input
+              type="text"
+              class="input w-full"
+              name="friendStatus"
+              [(ngModel)]="oneFriend.status"
+            />
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Bio</legend>
+            <textarea
+              class="textarea w-full h-24"
+              name="friendBio"
+              [(ngModel)]="oneFriend.bio"
+            ></textarea>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Image (URL)</legend>
+            <input
+              type="url"
+              class="input w-full"
+              name="friendImgUrl"
+              [(ngModel)]="oneFriend.imgurl"
+            />
+          </fieldset>
+
+          <div class="card-actions justify-end mt-4">
+            <button type="button" class="btn btn-secondary">Annuler</button>
+            <button type="button" class="btn btn-primary">Sauvegarder</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
