@@ -27,4 +27,9 @@ export const LESSONS_ROUTES: Routes = [
         (m) => m.ConditionalRenderingLesson,
       ),
   },
+  {
+    path: 'list-rendering-lesson',
+    loadComponent: () =>
+      import('./list-rendering-lesson/list-rendering-lesson').then((m) => m.ListRenderingLesson),
+  },
 ];
