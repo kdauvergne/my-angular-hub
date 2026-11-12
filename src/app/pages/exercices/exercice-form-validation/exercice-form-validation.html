@@ -1,0 +1,96 @@
+<div class="max-w-xl mx-auto my-10 p-4 space-y-6">
+  <div>
+    <h1 class="text-3xl font-extrabold text-primary">Exercice : Validation de Formulaire</h1>
+    <p class="text-sm text-base-content/70">
+      Validation temps réel via RegEx et <code>computed()</code> sans dépendre de ReactiveForms.
+    </p>
+  </div>
+
+  <div class="divider my-0"></div>
+
+  @if (isSubmitted()) {
+    <div class="alert alert-success flex flex-wrap justify-between">
+      <span>Compte créé avec succès !</span>
+      <button type="button" class="btn btn-sm" (click)="resetForm()">Réinitialiser</button>
+    </div>
+  } @else {
+    <div class="card bg-base-100 border border-base-300 shadow-sm">
+      <form class="card-body space-y-4" (submit)="submitForm($event)">
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Adresse Email</legend>
+          <input
+            type="email"
+            class="input w-full"
+            name="email"
+            [value]="email()"
+            (input)="onInput(email, emailTouched, $event)"
+            [class.input-error]="emailTouched() && !isEmailValid()"
+            [class.input-success]="emailTouched() && isEmailValid()"
+          />
+          @if (emailTouched() && !isEmailValid()) {
+            <p class="text-sm text-error">Veuillez saisir une adresse e-mail valide.</p>
+          }
+        </fieldset>
+
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Mot de passe</legend>
+          <div class="join w-full">
+            <input
+              class="input join-item w-full"
+              name="password"
+              [type]="showPassword() ? 'text' : 'password'"
+              [value]="password()"
+              (input)="onInput(password, passwordTouched, $event)"
+              [class.input-error]="passwordTouched() && !isPasswordValid()"
+              [class.input-success]="passwordTouched() && isPasswordValid()"
+            />
+            <button type="button" class="btn join-item" (click)="toggleShowPassword()">
+              {{ showPassword() ? 'Masquer' : 'Afficher' }}
+            </button>
+          </div>
+
+          @if (password()) {
+            <div class="flex justify-between text-xs">
+              <span>Force du mot de passe :</span>
+              <span class="font-bold">{{ passwordStrengthLabel().text }}</span>
+            </div>
+            <progress
+              class="progress w-full"
+              [class]="passwordStrengthLabel().class"
+              [value]="passwordScore()"
+              max="4"
+            ></progress>
+          }
+
+          @if (passwordTouched() && !isPasswordValid()) {
+            <p class="text-sm text-error">
+              8 caractères min., 1 majuscule, 1 chiffre et 1 caractère spécial (&#64;$!%*?&amp;).
+            </p>
+          }
+        </fieldset>
+
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Téléphone portable</legend>
+          <input
+            type="tel"
+            class="input w-full"
+            name="phone"
+            [value]="phone()"
+            (input)="onInput(phone, phoneTouched, $event)"
+            [class.input-error]="phoneTouched() && !isPhoneValid()"
+            [class.input-success]="phoneTouched() && isPhoneValid()"
+          />
+          @if (phoneTouched() && !isPhoneValid()) {
+            <p class="text-sm text-error">Format attendu : 06XXXXXXXX ou +336XXXXXXXX.</p>
+          }
+        </fieldset>
+
+        <div class="card-actions mt-4">
+          <button type="submit" class="btn btn-primary btn-block" [disabled]="!isFormValid()">
+            Créer mon compte
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

@@ -61,4 +61,12 @@ export const EXERCICES_ROUTES: Routes = [
     loadComponent: () =>
       import('./exercice-signals/exercice-signals').then((m) => m.ExerciceSignals),
   },
+  {
+    path: 'exercice-form-validation',
+    title: 'Form validation',
+    loadComponent: () =>
+      import('./exercice-form-validation/exercice-form-validation').then(
+        (m) => m.ExerciceFormValidation,
+      ),
+  },
 ];
