@@ -1,0 +1,162 @@
+<div class="max-w-6xl mx-auto my-10 space-y-10 p-4">
+
+  <!-- 🟦 En-tête -->
+  <div class="text-center space-y-2">
+    <h1 class="text-4xl font-extrabold text-primary">
+      ⚡ Les Signals dans Angular
+    </h1>
+    <p class="text-lg text-base-content/70 max-w-3xl mx-auto">
+      Les <strong>Signals</strong> apportent une réactivité fine et prédictive. Ils permettent à Angular de savoir exactement quelle partie du DOM mettre à jour sans reparcourir l'ensemble de l'application.
+    </p>
+  </div>
+
+  <!-- 🧪 Démo Interactive : Calculateur de Panier -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body space-y-4">
+      <h2 class="card-title text-secondary">🧪 Démo : Calculateur Réactif</h2>
+      <p class="text-xs text-base-content/70">
+        Modifiez les valeurs : les Signals calculés (<code>computed</code>) recalculent le total et la remise instantanément, tandis que l'effet (<code>effect</code>) alimente l'historique.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-2">
+
+        <!-- Contrôles -->
+        <div class="space-y-4 bg-base-100 p-4 rounded-xl border border-base-300">
+          <div>
+            <label class="label text-xs font-bold">Prix Unitaire (Signal Primitif)</label>
+            <input
+              type="number"
+              [value]="unitPrice()"
+              (input)="updateUnitPrice($event)"
+              class="input input-sm input-bordered w-full"
+            />
+          </div>
+
+          <div>
+            <label class="label text-xs font-bold">Quantité (Signal Primitif)</label>
+            <div class="flex items-center gap-3">
+              <button class="btn btn-sm btn-outline btn-error" (click)="decrement()">-</button>
+              <span class="font-bold text-lg w-8 text-center">{{ quantity() }}</span>
+              <button class="btn btn-sm btn-outline btn-success" (click)="increment()">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rendu dynamique réactif -->
+        <div class="space-y-3 bg-base-100 p-4 rounded-xl border border-base-300 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="flex justify-between text-sm">
+              <span>Prix brut :</span>
+              <span class="font-semibold">{{ totalPrice() }} €</span>
+            </div>
+
+            <div class="flex justify-between text-sm text-warning">
+              <span>Remise (dès 100 €) :</span>
+              <span class="font-semibold">- {{ discount() }} €</span>
+            </div>
+
+            <div class="divider my-1"></div>
+
+            <div class="flex justify-between text-base font-bold text-primary">
+              <span>Total Final (computed) :</span>
+              <span class="text-xl">{{ finalPrice() }} €</span>
+            </div>
+          </div>
+
+          <!-- Affichage des logs générés par l'effect -->
+          <div class="bg-neutral text-neutral-content p-3 rounded-lg text-[11px] font-mono space-y-1">
+            <div class="text-accent font-bold">⚡ Log de l'effect() :</div>
+            @for (log of effectLogs(); track $index) {
+              <div>{{ log }}</div>
+            }
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 📚 Les 3 piliers des Signals -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+
+    <!-- 1. Writable Signal -->
+    <div class="card bg-base-100 shadow-xl border border-base-300">
+      <div class="card-body p-5 space-y-3">
+        <h3 class="card-title text-sm text-primary">1. Signal Modifiable (Writable)</h3>
+        <p class="text-xs text-base-content/70">
+          Contient une valeur. On la lit avec <code>s()</code>, on la remplace avec <code>.set()</code> ou on la met à jour avec <code>.update()</code>.
+        </p>
+
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">Code TypeScript :</span>
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="signalCode | shiki:'typescript':'vitesse-dark' | async">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Computed -->
+    <div class="card bg-base-100 shadow-xl border border-base-300">
+      <div class="card-body p-5 space-y-3">
+        <h3 class="card-title text-sm text-secondary">2. Signal Calculé (<code>computed</code>)</h3>
+        <p class="text-xs text-base-content/70">
+          En lecture seule, dérivé d'autres signals. Mis en cache et réévalué uniquement en cas de besoin.
+        </p>
+
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">Code TypeScript :</span>
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="computedCode | shiki:'typescript':'vitesse-dark' | async">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Effect -->
+    <div class="card bg-base-100 shadow-xl border border-base-300">
+      <div class="card-body p-5 space-y-3">
+        <h3 class="card-title text-sm text-accent">3. Effet (<code>effect</code>)</h3>
+        <p class="text-xs text-base-content/70">
+          Déclenché lors des modifications de signals. Réservé aux effets secondaires (synchronisation `localStorage`, logging, API externe).
+        </p>
+
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">Code TypeScript :</span>
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="effectCode | shiki:'typescript':'vitesse-dark' | async">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 🎯 Synthèse & Avantages -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body">
+      <h3 class="card-title text-primary mb-2">🎯 Pourquoi adopter les Signals ?</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mt-2">
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-success block mb-1">Simplicité vs RxJS</span>
+          Pour l'état local synchrone (compteurs, toggles, états de formulaires), les Signals remplacent avantageusement les `BehaviorSubject` et éliminent le besoin d'abonnements ou de gestion du désabonnement.
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-info block mb-1">Performances Zoneless</span>
+          Angular sait exactement quel nœud du DOM doit être mis à jour sans ré-évaluer l'intégralité de l'arbre de composants via `Zone.js`.
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-warning block mb-1">Interopérabilité RxJS</span>
+          RxJS reste l'outil idéal pour l'asynchronisme complexe (requêtes HTTP, annulation de recherche, debounce). Angular fournit `toSignal()` et `toObservable()` pour faire le lien en toute simplicité.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

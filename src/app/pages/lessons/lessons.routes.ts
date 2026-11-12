@@ -37,4 +37,9 @@ export const LESSONS_ROUTES: Routes = [
     loadComponent: () =>
       import('./list-rendering-lesson/list-rendering-lesson').then((m) => m.ListRenderingLesson),
   },
+  {
+    path: 'signals-lesson',
+    title: 'Signals',
+    loadComponent: () => import('./signals-lesson/signals-lesson').then((m) => m.SignalsLesson),
+  },
 ];
