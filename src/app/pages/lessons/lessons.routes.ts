@@ -54,4 +54,10 @@ export const LESSONS_ROUTES: Routes = [
     loadComponent: () =>
       import('./observables-lesson/observables-lesson').then((m) => m.ObservablesLesson),
   },
+  {
+    path: 'http-client-lesson',
+    title: 'HttpClient',
+    loadComponent: () =>
+      import('./http-client-lesson/http-client-lesson').then((m) => m.HttpClientLesson),
+  },
 ];
