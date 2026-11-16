@@ -42,4 +42,10 @@ export const LESSONS_ROUTES: Routes = [
     title: 'Signals',
     loadComponent: () => import('./signals-lesson/signals-lesson').then((m) => m.SignalsLesson),
   },
+  {
+    path: 'dynamic-styling-lesson',
+    title: 'Dynamic styling',
+    loadComponent: () =>
+      import('./dynamic-styling-lesson/dynamic-styling-lesson').then((m) => m.DynamicStylingLesson),
+  },
 ];
