@@ -77,4 +77,12 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceObservableSimple,
       ),
   },
+  {
+    path: 'exercice-api-http-client',
+    title: 'API HttpClient',
+    loadComponent: () =>
+      import('./exercice-api-http-client/exercice-api-http-client').then(
+        (m) => m.ExerciceApiHttpClient,
+      ),
+  },
 ];
