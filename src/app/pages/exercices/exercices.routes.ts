@@ -69,4 +69,12 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceFormValidation,
       ),
   },
+  {
+    path: 'exercice-observable-simple',
+    title: 'Observable simple',
+    loadComponent: () =>
+      import('./exercice-observable-simple/exercice-observable-simple').then(
+        (m) => m.ExerciceObservableSimple,
+      ),
+  },
 ];
