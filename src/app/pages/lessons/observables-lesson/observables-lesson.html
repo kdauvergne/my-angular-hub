@@ -1,0 +1,172 @@
+<div class="max-w-6xl mx-auto my-10 space-y-10 p-4">
+
+  <!-- 🟦 En-tête -->
+  <div class="text-center space-y-2">
+    <h1 class="text-4xl font-extrabold text-primary">
+      🌊 Les Observables RxJS & le Cycle de Vie
+    </h1>
+    <p class="text-lg text-base-content/70 max-w-3xl mx-auto">
+      Un <strong>Observable</strong> représente un flux de données asynchrone push. L'<strong>Observer</strong> écoute ce flux via trois callbacks : <code>next</code>, <code>error</code>, et <code>complete</code>.
+    </p>
+  </div>
+
+  <!-- 💡 Alert RxJS -->
+  <div class="alert alert-secondary shadow-lg">
+    <div>
+      <h4 class="font-bold text-lg">Qu'est-ce que RxJS ?</h4>
+      <p class="text-sm mt-1">
+        <strong>RxJS</strong> (Reactive Extensions for JavaScript) est la bibliothèque de programmation réactive au cœur d'Angular. Elle fournit les outils nécessaires pour écouter, transformer et combiner des événements asynchrones via des <em>opérateurs</em> (<code>map</code>, <code>filter</code>, <code>switchMap</code>...).
+      </p>
+    </div>
+  </div>
+
+  <!-- 🧪 Démo Interactive -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body space-y-4">
+      <div class="flex justify-between items-center flex-wrap gap-2">
+        <h2 class="card-title text-secondary">🧪 Démo : Interval & Cycle de vie</h2>
+
+        <!-- Badge de Statut -->
+        <span class="badge badge-lg font-mono font-bold"
+          [class.badge-ghost]="streamStatus() === 'IDLE'"
+          [class.badge-info]="streamStatus() === 'RUNNING'"
+          [class.badge-success]="streamStatus() === 'COMPLETED'"
+          [class.badge-error]="streamStatus() === 'ERROR'"
+          [class.badge-warning]="streamStatus() === 'UNSUBSCRIBED'">
+          {{ streamStatus() }}
+        </span>
+      </div>
+
+      <p class="text-xs text-base-content/70">
+        Testez la réception des données en temps réel, l'envoi d'une erreur, le 'complete', ou l'arrêt manuel via <code>unsubscribe()</code>.
+      </p>
+
+      <!-- Barre de contrôles -->
+      <div class="flex flex-wrap gap-2 my-1">
+        <button class="btn btn-sm btn-primary" (click)="startInterval()">
+          ▶️ Lancer interval(1000)
+        </button>
+        <button class="btn btn-sm btn-warning" (click)="stopInterval()">
+          🛑 Se désabonner (unsubscribe)
+        </button>
+        <button class="btn btn-sm btn-success" (click)="triggerCustomObservable('complete')">
+          ✅ Simuler Flux Complete
+        </button>
+        <button class="btn btn-sm btn-error" (click)="triggerCustomObservable('error')">
+          💥 Simuler Erreur
+        </button>
+        <button class="btn btn-sm btn-ghost ml-auto" (click)="clearLogs()">
+          🗑️ Effacer
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+
+        <!-- Valeur courante -->
+        <div class="bg-base-100 p-6 rounded-xl border border-base-300 flex flex-col items-center justify-center shadow-sm">
+          <span class="text-xs text-base-content/60 font-bold uppercase tracking-wider mb-2">Dernière Valeur (next)</span>
+          <span class="text-5xl font-mono font-extrabold text-primary">
+            {{ counterValue() !== null ? counterValue() : '--' }}
+          </span>
+        </div>
+
+        <!-- Terminal de Logs -->
+        <div class="md:col-span-2 bg-neutral text-neutral-content p-4 rounded-xl font-mono text-xs space-y-1 h-48 overflow-y-auto shadow-sm">
+          <div class="text-accent font-bold mb-2">📜 Journal des événements Observer :</div>
+          @for (log of logs(); track $index) {
+            <div class="leading-relaxed">{{ log }}</div>
+          } @empty {
+            <div class="text-neutral-content/40 italic">Cliquez sur un bouton pour démarrer le flux...</div>
+          }
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 📚 Concepts Clés -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+
+    <!-- 1. Structure Observer -->
+    <div class="card bg-base-100 shadow-xl border border-base-300">
+      <div class="card-body p-5 space-y-3">
+        <h3 class="card-title text-sm text-primary">1. L'Observer (3 méthodes)</h3>
+        <ul class="text-xs text-base-content/70 list-disc list-inside space-y-1">
+          <li><code>next(val)</code> : Reçoit chaque émission de donnée.</li>
+          <li><code>error(err)</code> : Interrompt le flux sur une erreur.</li>
+          <li><code>complete()</code> : Indique la fermeture définitive du flux.</li>
+        </ul>
+
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">Code TypeScript :</span>
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="observerCode | shiki:'typescript':'vitesse-dark' | async">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Interval & Unsubscribe -->
+    <div class="card bg-base-100 shadow-xl border border-base-300">
+      <div class="card-body p-5 space-y-3">
+        <h3 class="card-title text-sm text-secondary">2. <code>interval()</code> & <code>unsubscribe()</code></h3>
+        <p class="text-xs text-base-content/70">
+          Les flux continus (comme <code>interval</code> ou les événements DOM) poursuivent leurs émissions en arrière-plan tant qu'on ne stoppe pas la souscription via <code>.unsubscribe()</code>.
+        </p>
+
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">Code TypeScript :</span>
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="intervalCode | shiki:'typescript':'vitesse-dark' | async">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Nettoyage Moderne -->
+    <div class="card bg-base-100 shadow-xl border border-base-300">
+      <div class="card-body p-5 space-y-3">
+        <h3 class="card-title text-sm text-accent">3. Nettoyage Automatique</h3>
+        <p class="text-xs text-base-content/70">
+          Utilisez l'opérateur <code>takeUntilDestroyed()</code> pour lier automatiquement la fin du flux au cycle de vie du composant sans manipuler manuellement la variable <code>Subscription</code>.
+        </p>
+
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">Code TypeScript :</span>
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="modernCleanupCode | shiki:'typescript':'vitesse-dark' | async">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 🎯 Bonnes pratiques -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body">
+      <h3 class="card-title text-primary mb-2">🎯 Règle d'or en entreprise</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mt-2">
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-error block mb-1">⚠️ Risque : Fuites mémoire (Memory Leaks)</span>
+          Oublier de se désabonner d'un flux continu (WebSockets, événements DOM, `interval`) maintient l'Observer en mémoire même après la destruction du composant.
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-info block mb-1">🌐 Cas de HttpClient</span>
+          Les requêtes HTTP Angular (<code>HttpClient.get()</code>) émettent une seule valeur puis appellent automatiquement <code>.complete()</code>. Le désabonnement manuel n'y est pas obligatoire.
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-success block mb-1">💡 Pipe `async` dans le Template</span>
+          Dans le HTML, l'expression <code>&#123;&#123; myObservable$ | async &#125;&#125;</code> gère automatiquement la souscription et le désabonnement à la destruction du composant.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

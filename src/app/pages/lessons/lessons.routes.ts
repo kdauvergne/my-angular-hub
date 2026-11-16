@@ -48,4 +48,10 @@ export const LESSONS_ROUTES: Routes = [
     loadComponent: () =>
       import('./dynamic-styling-lesson/dynamic-styling-lesson').then((m) => m.DynamicStylingLesson),
   },
+  {
+    path: 'observables-lesson',
+    title: 'Observables',
+    loadComponent: () =>
+      import('./observables-lesson/observables-lesson').then((m) => m.ObservablesLesson),
+  },
 ];
