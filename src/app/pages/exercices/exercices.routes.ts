@@ -85,4 +85,12 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceApiHttpClient,
       ),
   },
+  {
+    path: 'exercice-observable-advanced',
+    title: 'Observable advanced',
+    loadComponent: () =>
+      import('./exercice-observable-advanced/exercice-observable-advanced').then(
+        (m) => m.ExerciceObservableAdvanced,
+      ),
+  },
 ];

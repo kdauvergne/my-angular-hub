@@ -1,0 +1,40 @@
+<div class="max-w-3xl mx-auto my-10 p-4 space-y-6">
+  <h1 class="text-3xl font-extrabold text-primary">Générateur simplifié de nombres aléatoires</h1>
+
+  <div class="flex flex-wrap items-center gap-2">
+    <button type="button" class="btn btn-success" (click)="start()">Démarrer</button>
+    <button type="button" class="btn btn-warning" (click)="pauseResume()">
+      {{ paused() ? 'Reprendre' : 'Pause' }}
+    </button>
+    <button type="button" class="btn btn-error" (click)="stop()">Arrêter</button>
+    <label class="label cursor-pointer gap-2">
+      <input type="checkbox" class="checkbox" [(ngModel)]="filterEven" />
+      Nombres pairs uniquement
+    </label>
+  </div>
+
+  <div class="card bg-base-100 border border-base-300 shadow-sm">
+    <div class="card-body">
+      <h2 class="card-title">Nombres générés</h2>
+      <ul class="flex flex-col items-center gap-2">
+        @for (number of numbers(); track $index) {
+          <li
+            class="flex items-center justify-between w-full px-4 py-2 rounded-box border"
+            [class]="
+              number.value % 2 === 0 ? 'bg-success/10  text-success' : 'bg-warning/10 text-error'
+            "
+          >
+            {{ number.value }}
+            <span
+              class="badge badge-sm"
+              [class]="number.value > 50 ? 'badge-error' : 'badge-warning'"
+              >{{ number.label }}</span
+            >
+          </li>
+        } @empty {
+          <li>Aucun nombre généré pour l'instant</li>
+        }
+      </ul>
+    </div>
+  </div>
+</div>
