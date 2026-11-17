@@ -1,0 +1,353 @@
+<div class="max-w-6xl mx-auto my-10 space-y-10 p-4">
+
+  <!-- 🟦 En-tête -->
+  <div class="text-center space-y-2">
+    <h1 class="text-4xl font-extrabold text-primary">
+      💉 Services &amp; Injection de Dépendances (DI)
+    </h1>
+    <p class="text-lg text-base-content/70 max-w-3xl mx-auto">
+      Séparez la logique métier de vos templates et partagez un état réactif entre plusieurs composants grâce aux <strong>Services</strong> et à la fonction <code>inject()</code>.
+    </p>
+  </div>
+
+  <!-- 🟨 Pourquoi utiliser des Services ? -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="card bg-base-100 shadow-lg border-t-4 border-primary">
+      <div class="card-body p-5 space-y-1">
+        <h2 class="card-title text-base text-primary">🧹 Composants Légers</h2>
+        <p class="text-xs text-base-content/70">
+          Un composant ne doit gérer que l'affichage et les interactions UI. Les calculs métier, appels HTTP et règles de validation vivent dans des services.
+        </p>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-lg border-t-4 border-secondary">
+      <div class="card-body p-5 space-y-1">
+        <h2 class="card-title text-base text-secondary">🔄 Partage d'État (Singleton)</h2>
+        <p class="text-xs text-base-content/70">
+          Avec <code>providedIn: 'root'</code> (ou <code>&#64;Service()</code>), Angular crée une instance unique partagée par toute l'application (panier, utilisateur connecté, notifications).
+        </p>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-lg border-t-4 border-accent">
+      <div class="card-body p-5 space-y-1">
+        <h2 class="card-title text-base text-accent">🧪 Testabilité &amp; Réutilisation</h2>
+        <p class="text-xs text-base-content/70">
+          Une logique centralisée dans un service s'injecte dans n'importe quel composant, guard ou intercepteur sans duplication de code.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🧪 Démo Interactive : Communication via NotificationService -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body space-y-4">
+      <div class="flex flex-wrap justify-between items-center gap-2">
+        <div>
+          <h2 class="card-title text-secondary">🧪 Démo Live : Partage d'état via <code>NotificationService</code></h2>
+          <p class="text-xs text-base-content/70">
+            Simulez deux composants indépendants (un émetteur et un centre de notifications) synchronisés instantanément par le même service.
+          </p>
+        </div>
+
+        <div class="badge badge-primary badge-lg font-bold gap-2">
+          Non lues : {{ notifService.unreadCount() }}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
+
+        <!-- Panneau A : Émetteur -->
+        <form (submit)="sendNotification($event)" class="bg-base-100 p-5 rounded-xl border border-base-300 space-y-4">
+          <div class="flex items-center justify-between border-b border-base-200 pb-2">
+            <span class="font-bold text-sm text-primary">📤 Composant A : Émetteur</span>
+            <span class="badge badge-ghost badge-xs font-mono">notifService.addNotification()</span>
+          </div>
+
+          <div class="form-control">
+            <label class="label"><span class="label-text text-xs font-bold">Message de notification</span></label>
+            <input
+              type="text"
+              placeholder="Ex: Sauvegarde effectuée..."
+              class="input input-bordered input-sm w-full"
+              [value]="newMessage()"
+              (input)="updateMessage($event)" />
+          </div>
+
+          <div class="form-control">
+            <label class="label"><span class="label-text text-xs font-bold">Niveau d'alerte</span></label>
+            <select
+              class="select select-bordered select-sm w-full"
+              [value]="selectedType()"
+              (change)="updateType($event)">
+              <option value="info">ℹ️ Information (info)</option>
+              <option value="success">✅ Succès (success)</option>
+              <option value="warning">⚠️ Avertissement (warning)</option>
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-sm w-full"
+            [disabled]="!newMessage().trim()">
+            Envoyer au Service
+          </button>
+        </form>
+
+        <!-- Panneau B : Récepteur -->
+        <div class="bg-base-100 p-5 rounded-xl border border-base-300 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-base-200 pb-2">
+            <span class="font-bold text-sm text-secondary">📥 Composant B : Centre de notifications</span>
+            <div class="flex gap-1">
+              <button
+                type="button"
+                class="btn btn-xs btn-outline btn-success"
+                (click)="notifService.markAllAsRead()"
+                [disabled]="notifService.unreadCount() === 0">
+                Tout lire
+              </button>
+              <button
+                type="button"
+                class="btn btn-xs btn-outline btn-error"
+                (click)="notifService.clearAll()"
+                [disabled]="notifService.notifications().length === 0">
+                Vider
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-2 max-h-56 overflow-y-auto pr-1">
+            @for (notif of notifService.notifications(); track notif.id) {
+              <div
+                class="p-3 rounded-lg border flex items-center justify-between gap-2 text-xs transition-all"
+                [class.bg-base-200]="notif.read"
+                [class.opacity-60]="notif.read"
+                [class.bg-primary/5]="!notif.read"
+                [class.border-primary/40]="!notif.read"
+                [class.border-base-300]="notif.read">
+
+                <div class="space-y-0.5">
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="badge badge-xs"
+                      [class.badge-info]="notif.type === 'info'"
+                      [class.badge-success]="notif.type === 'success'"
+                      [class.badge-warning]="notif.type === 'warning'">
+                      {{ notif.type }}
+                    </span>
+                    <span class="font-mono text-[10px] opacity-60">{{ notif.timestamp }}</span>
+                    @if (!notif.read) {
+                      <span class="badge badge-primary badge-xs">Nouveau</span>
+                    }
+                  </div>
+                  <p class="font-medium">{{ notif.message }}</p>
+                </div>
+
+                <button
+                  type="button"
+                  class="btn btn-ghost btn-xs text-error"
+                  (click)="notifService.removeNotification(notif.id)"
+                  aria-label="Supprimer">
+                  ✕
+                </button>
+              </div>
+            } @empty {
+              <div class="text-center py-8 text-xs text-base-content/50 border border-dashed border-base-300 rounded-lg">
+                Aucune notification dans le service.
+              </div>
+            }
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ SECTION 1 : Créer un Service moderne avec Signals -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">🏗️</span> 1. Anatomie d'un Service avec Signals
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-3">
+          <h3 class="card-title text-base text-primary">Les décorateurs <code>&#64;Injectable</code> &amp; <code>&#64;Service</code></h3>
+          <p class="text-xs text-base-content/80">
+            Un service Angular est une classe TypeScript décorée par <code>&#64;Injectable(&#123; providedIn: 'root' &#125;)</code> (ou son raccourci moderne <code>&#64;Service()</code> en Angular 22+). Cela indique à l'injecteur racine de créer une instance unique (<strong>Singleton</strong>) et d'activer le <em>Tree-Shaking</em>.
+          </p>
+
+          <div class="bg-base-200 p-4 rounded-lg space-y-2 text-xs">
+            <span class="font-bold text-secondary block">Encapsulation recommandée :</span>
+            <ul class="list-disc list-inside space-y-1 text-base-content/80">
+              <li>Gardez le <code>signal()</code> d'origine <code>private</code> dans le service.</li>
+              <li>Exposez sa version <code>.asReadonly()</code> aux composants.</li>
+              <li>Obligez les composants à passer par les méthodes du service (<code>add()</code>, <code>remove()</code>) pour modifier les données.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">
+          Implémentation type (notification.service.ts) :
+        </span>
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="serviceCreationCode | shiki:'typescript':'vitesse-dark' | async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⚔️ SECTION 2 : Constructor Injection vs inject() -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">⚡</span> 2. Injecter un Service : <code>constructor</code> vs <code>inject()</code>
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+      <!-- Historique : Constructor -->
+      <div class="card bg-base-100 shadow-xl border-2 border-warning/40">
+        <div class="card-body space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="card-title text-base text-warning">Injection par Constructeur</h3>
+            <span class="badge badge-warning badge-outline text-xs">Historique</span>
+          </div>
+          <p class="text-xs text-base-content/70">
+            L'approche classique déclare les dépendances comme paramètres du <code>constructor</code>. Elle reste fonctionnelle mais alourdit l'héritage de classes et ne s'utilise que dans des classes Angular.
+          </p>
+
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="constructorInjectionCode | shiki:'typescript':'vitesse-dark' | async">
+          </div>
+        </div>
+      </div>
+
+      <!-- Moderne : inject() -->
+      <div class="card bg-base-100 shadow-xl border-2 border-success/40">
+        <div class="card-body space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="card-title text-base text-success">Fonction <code>inject()</code></h3>
+            <span class="badge badge-success text-white text-xs">Standard Moderne</span>
+          </div>
+          <p class="text-xs text-base-content/70">
+            Introduite pour simplifier l'architecture Angular : typage automatique, zéro constructeur verbeux, et utilisable directement dans les <em>Route Guards</em> ou <em>HTTP Interceptors</em> fonctionnels.
+          </p>
+
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="modernInjectCode | shiki:'typescript':'vitesse-dark' | async">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 🌳 SECTION 3 : Portée des Services (Singleton vs Locale) -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">🌳</span> 3. Hiérarchie d'Injection : Singleton vs Instance Locale
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <div class="space-y-3 text-sm">
+        <div class="p-4 bg-base-100 rounded-xl border border-base-300 shadow-sm">
+          <h3 class="font-bold text-primary mb-1">🌍 Niveau Racine (<code>providedIn: 'root'</code>)</h3>
+          <p class="text-xs text-base-content/70">
+            C'est le comportement par défaut généré par la CLI (<code>ng generate service</code>). Tous les composants qui injectent ce service reçoivent <strong>exactement la même instance</strong> en mémoire.
+          </p>
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-xl border border-base-300 shadow-sm">
+          <h3 class="font-bold text-accent mb-1">📦 Niveau Composant (<code>providers: [...]</code>)</h3>
+          <p class="text-xs text-base-content/70">
+            Si vous déclarez un service dans le tableau <code>providers</code> d'un <code>&#64;Component</code>, Angular crée une instance isolée dédiée uniquement à ce composant et à ses enfants directs. Elle est détruite dès que le composant quitte l'écran.
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">
+          Configurer la portée d'un service :
+        </span>
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="hierarchicalScopeCode | shiki:'typescript':'vitesse-dark' | async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🏭 SECTION 4 : Les Factories (Instanciation dynamique) -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">🏭</span> 4. Instanciation Dynamique : Les Factories
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-3">
+          <h3 class="card-title text-base text-primary">Pourquoi déléguer la création à une fonction ?</h3>
+          <p class="text-xs text-base-content/80">
+            Par défaut, Angular instancie une classe telle quelle. Une <strong>Factory</strong> permet d'exécuter une logique au moment de l'injection pour décider <em>quelle</em> implémentation fournir ou <em>comment</em> la configurer.
+          </p>
+
+          <div class="bg-base-200 p-4 rounded-lg space-y-2 text-xs">
+            <span class="font-bold text-secondary block">Cas d'usage concrets :</span>
+            <ul class="list-disc list-inside space-y-1 text-base-content/80">
+              <li><strong>Basculer selon l'environnement :</strong> injecter un <code>DevLogger</code> en local et un <code>ProdLogger</code> en production.</li>
+              <li><strong>Initialiser un <code>InjectionToken</code> :</strong> lire une valeur dans <code>environment</code> ou <code>localStorage</code> avant de la fournir aux composants.</li>
+              <li><strong>Injection interne :</strong> appeler <code>inject()</code> directement à l'intérieur de la fonction <code>factory</code> pour composer le service.</li>
+            </ul>
+          </div>
+
+          <div class="alert alert-info text-xs py-2.5">
+            <span>
+              💡 En <strong>Angular 22+</strong>, le décorateur <code>&#64;Service(&#123; factory: () =&gt; ... &#125;)</code> remplace avantageusement la syntaxe historique <code>useFactory</code>.
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">
+          Choisir une implémentation au runtime :
+        </span>
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="factoryPatternCode | shiki:'typescript':'vitesse-dark' | async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 💡 Synthèse -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body">
+      <h3 class="card-title text-primary mb-2">🎯 Bonnes pratiques à retenir</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mt-2">
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-success block mb-1">1. Contexte d'injection</span>
+          La fonction <code>inject()</code> doit être appelée dans un contexte d'injection valide (initialisation d'une propriété de classe ou dans le <code>constructor</code>), jamais à l'intérieur d'une méthode appelée plus tard (comme <code>ngOnInit</code> ou un <code>(click)</code>).
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-info block mb-1">2. État immuable en sortie</span>
+          Exposez toujours vos signals de service avec <code>.asReadonly()</code> afin de garantir un flux de données prévisible et facile à déboguer.
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-warning block mb-1">3. CLI Angular</span>
+          Générez rapidement un service bien placé avec la commande : <code>ng generate service services/nom-du-service</code> (ou <code>ng g s services/nom</code>).
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

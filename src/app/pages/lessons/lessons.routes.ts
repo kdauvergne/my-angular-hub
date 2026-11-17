@@ -65,4 +65,12 @@ export const LESSONS_ROUTES: Routes = [
     title: 'Models',
     loadComponent: () => import('./models-lesson/models-lesson').then((m) => m.ModelsLesson),
   },
+  {
+    path: 'services-injection-lesson',
+    title: 'Services & injection',
+    loadComponent: () =>
+      import('./services-injection-lesson/services-injection-lesson').then(
+        (m) => m.ServicesInjectionLesson,
+      ),
+  },
 ];
