@@ -101,4 +101,12 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceMeteoServiceModel,
       ),
   },
+  {
+    path: 'exercice-shop-cart-service',
+    title: 'Shop cart service',
+    loadComponent: () =>
+      import('./exercice-shop-cart-service/exercice-shop-cart-service').then(
+        (m) => m.ExerciceShopCartService,
+      ),
+  },
 ];
