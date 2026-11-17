@@ -93,4 +93,12 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceObservableAdvanced,
       ),
   },
+  {
+    path: 'exercice-meteo-service-model',
+    title: 'Meteo service & model',
+    loadComponent: () =>
+      import('./exercice-meteo-service-model/exercice-meteo-service-model').then(
+        (m) => m.ExerciceMeteoServiceModel,
+      ),
+  },
 ];

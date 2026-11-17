@@ -1,0 +1,50 @@
+<div class="max-w-5xl mx-auto my-10 p-4 space-y-8">
+  <div class="card bg-base-100 border border-base-300 shadow-sm">
+    <div class="card-body space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 class="text-3xl font-extrabold text-primary">Météo en Direct (Service + API)</h1>
+          <p class="text-sm text-base-content/70">
+            Données fournies par <code>prevision-meteo.ch</code> via <code>MeteoService</code>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="flex justify-center">
+      <span class="loading loading-spinner loading-lg text-primary"></span>
+    </div>
+  } @else if (meteoData(); as meteo) {
+    <div class="card bg-base-100 border border-base-300 shadow-sm">
+      <div class="card-body space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-4xl font-extrabold">
+              {{ meteo.city_info.name }}
+              <span class="badge badge-outline badge-primary">{{ meteo.city_info.country }}</span>
+            </h2>
+            <p class="text-sm text-base-content/70">
+              Altitude : <strong>{{ meteo.city_info.elevation }} m</strong>
+            </p>
+          </div>
+
+          <div class="flex items-center gap-4 p-4 rounded-box">
+            <img
+              class="w-20 p-2 rounded-box"
+              [src]="meteo.current_condition.icon_big"
+              [alt]="meteo.current_condition.condition"
+            />
+            <div>
+              <p class="text-4xl font-extrabold text-primary">
+                {{ meteo.current_condition.tmp }}°C
+              </p>
+              <p class="text-sm">{{ meteo.current_condition.condition }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
