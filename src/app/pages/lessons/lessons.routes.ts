@@ -60,4 +60,9 @@ export const LESSONS_ROUTES: Routes = [
     loadComponent: () =>
       import('./http-client-lesson/http-client-lesson').then((m) => m.HttpClientLesson),
   },
+  {
+    path: 'models-lesson',
+    title: 'Models',
+    loadComponent: () => import('./models-lesson/models-lesson').then((m) => m.ModelsLesson),
+  },
 ];

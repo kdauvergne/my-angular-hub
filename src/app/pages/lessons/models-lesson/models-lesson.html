@@ -1,0 +1,306 @@
+<div class="max-w-6xl mx-auto my-10 space-y-10 p-4">
+
+  <!-- 🟦 En-tête -->
+  <div class="text-center space-y-2">
+    <h1 class="text-4xl font-extrabold text-primary">
+      📐 Les Modèles de Données (<code>/models</code>)
+    </h1>
+    <p class="text-lg text-base-content/70 max-w-3xl mx-auto">
+      Structurez vos données métier avec <strong>TypeScript</strong> en centralisant vos <code>interfaces</code> et <code>classes</code> dans un dossier dédié.
+    </p>
+  </div>
+
+  <!-- 🟨 SECTION 1 : Pourquoi un dossier /models ? -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">📁</span> 1. Pourquoi créer un dossier <code>src/app/models/</code> ?
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="card bg-base-100 shadow-lg border-t-4 border-primary">
+        <div class="card-body p-5 space-y-1">
+          <h3 class="card-title text-base text-primary">🎯 Source Unique de Vérité</h3>
+          <p class="text-xs text-base-content/80">
+            Évitez de redéfinir la structure d'un utilisateur ou d'un produit dans chaque composant. Si une propriété change côté API, vous ne modifiez qu'un seul fichier <code>.model.ts</code>.
+          </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-lg border-t-4 border-secondary">
+        <div class="card-body p-5 space-y-1">
+          <h3 class="card-title text-base text-secondary">🛡️ Sécurité &amp; Autocomplétion</h3>
+          <p class="text-xs text-base-content/80">
+            Fini les types <code>any</code> ! L'éditeur (VS Code) suggère automatiquement les propriétés exactes dans vos services TypeScript et vos templates HTML (<code>&#64;for</code>, interpolations).
+          </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-lg border-t-4 border-accent">
+        <div class="card-body p-5 space-y-1">
+          <h3 class="card-title text-base text-accent">🧹 Architecture Découplée</h3>
+          <p class="text-xs text-base-content/80">
+            En isolant les modèles dans <code>app/models/</code>, vous évitez les <strong>imports circulaires</strong> entre vos services et vos composants.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center pt-2">
+      <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-3">
+          <h3 class="card-title text-base text-primary">Convention de nommage Angular</h3>
+          <p class="text-xs text-base-content/80">
+            Bien que TypeScript accepte n'importe quel nom de fichier, la convention professionnelle consiste à suffixer vos fichiers par <code>.model.ts</code> (ex: <code>user.model.ts</code>) et d'exporter explicitement chaque structure avec le mot-clé <code>export</code>.
+          </p>
+          <div class="p-3 bg-base-200 rounded-lg text-xs">
+            <span class="font-bold text-secondary block mb-1">💡 Astuce : Le fichier baril (<code>index.ts</code>)</span>
+            Un fichier <code>models/index.ts</code> contenant <code>export * from './user.model';</code> permet de regrouper tous vos imports sur une seule ligne propre : <code>import &#123; User, Product &#125; from '../models';</code>.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">
+          Arborescence recommandée :
+        </span>
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="folderStructureCode | shiki:'plaintext':'vitesse-dark' | async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🧪 SIMULATEUR INTERACTIF : INTERFACE VS CLASS VS OMIT -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body space-y-4">
+      <div class="flex flex-wrap justify-between items-center gap-2">
+        <div>
+          <h2 class="card-title text-secondary">🧪 Bac à Sable : <code>interface</code> vs <code>class</code> vs <code>Omit</code></h2>
+          <p class="text-xs text-base-content/70">
+            Modifiez les champs et basculez entre les trois approches pour observer leur comportement au moment de l'exécution (runtime).
+          </p>
+        </div>
+
+        <div class="join">
+          <button
+            class="btn btn-xs join-item"
+            [class.btn-primary]="selectedMode() === 'interface'"
+            (click)="setMode('interface')">
+            Interface (User)
+          </button>
+          <button
+            class="btn btn-xs join-item"
+            [class.btn-secondary]="selectedMode() === 'class'"
+            (click)="setMode('class')">
+            Class (new UserClass)
+          </button>
+          <button
+            class="btn btn-xs join-item"
+            [class.btn-accent]="selectedMode() === 'omit'"
+            (click)="setMode('omit')">
+            Omit&lt;User, 'id'&gt;
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
+        <!-- Formulaire de test -->
+        <div class="bg-base-100 p-4 rounded-xl border border-base-300 space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <div class="form-control">
+              <label class="label py-1"><span class="label-text text-xs font-bold">Prénom</span></label>
+              <input
+                type="text"
+                class="input input-bordered input-xs w-full"
+                [value]="firstNameInput()"
+                (input)="updateFirstName($event)" />
+            </div>
+            <div class="form-control">
+              <label class="label py-1"><span class="label-text text-xs font-bold">Nom</span></label>
+              <input
+                type="text"
+                class="input input-bordered input-xs w-full"
+                [value]="lastNameInput()"
+                (input)="updateLastName($event)" />
+            </div>
+          </div>
+
+          <div class="form-control">
+            <label class="label py-1"><span class="label-text text-xs font-bold">Rôle (Type Union)</span></label>
+            <select
+              class="select select-bordered select-xs w-full"
+              [value]="roleInput()"
+              (change)="updateRole($event)">
+              <option value="student">student</option>
+              <option value="admin">admin</option>
+              <option value="guest">guest</option>
+            </select>
+          </div>
+
+          <!-- Test de méthode métier -->
+          <div
+            class="p-3 rounded-lg text-xs font-mono border"
+            [class.bg-success/10]="selectedMode() === 'class'"
+            [class.border-success/40]="selectedMode() === 'class'"
+            [class.text-success]="selectedMode() === 'class'"
+            [class.bg-base-200]="selectedMode() !== 'class'"
+            [class.border-base-300]="selectedMode() !== 'class'">
+            {{ computedMethodPreview() }}
+          </div>
+        </div>
+
+        <!-- Résultat JSON en mémoire -->
+        <div class="bg-neutral text-neutral-content p-4 rounded-xl font-mono text-xs space-y-2">
+          <div class="flex justify-between items-center border-b border-neutral-content/20 pb-1">
+            <span class="text-primary font-bold">Objet généré en mémoire :</span>
+            <span class="badge badge-xs badge-ghost">
+              {{ selectedMode() === 'class' ? 'Instance de UserClass' : 'Objet littéral JS' }}
+            </span>
+          </div>
+          <pre class="overflow-x-auto text-[11px]">{{ simulatedPayload() | json }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⚔️ SECTION 2 : Exporter une Interface vs Exporter une Classe -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">⚔️</span> 2. Exporter une <code>interface</code> vs une <code>class</code>
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+      <!-- Interface -->
+      <div class="card bg-base-100 shadow-xl border-2 border-primary/40">
+        <div class="card-body space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="card-title text-base text-primary">Option A : <code>export interface</code></h3>
+            <span class="badge badge-primary text-white text-xs">90% des cas (API / JSON)</span>
+          </div>
+          <p class="text-xs text-base-content/70">
+            Une <code>interface</code> décrit uniquement la forme attendue d'un objet. Elle n'existe <strong>qu'à la compilation</strong> (0 octet ajouté au bundle JavaScript final) et correspond parfaitement aux données JSON reçues via <code>HttpClient</code> ou <code>Firestore</code>.
+          </p>
+
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="interfaceCode | shiki:'typescript':'vitesse-dark' | async">
+          </div>
+        </div>
+      </div>
+
+      <!-- Class -->
+      <div class="card bg-base-100 shadow-xl border-2 border-secondary/40">
+        <div class="card-body space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="card-title text-base text-secondary">Option B : <code>export class</code></h3>
+            <span class="badge badge-secondary text-white text-xs">Logique métier &amp; Défauts</span>
+          </div>
+          <p class="text-xs text-base-content/70">
+            Une <code>class</code> existe réellement au <strong>runtime</strong>. Utilisez-la lorsque vous devez instancier un objet avec <code>new</code>, initialiser des valeurs par défaut ou embarquer des méthodes de calcul (ex: <code>getPriceTTC()</code>).
+          </p>
+
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="classCode | shiki:'typescript':'vitesse-dark' | async">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tableau récapitulatif -->
+    <div class="overflow-x-auto bg-base-100 rounded-xl border border-base-300 shadow-sm mt-4">
+      <table class="table table-zebra text-xs">
+        <thead>
+          <tr class="bg-base-200">
+            <th>Caractéristique</th>
+            <th class="text-primary"><code>export interface</code></th>
+            <th class="text-secondary"><code>export class</code></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-bold">Présence dans le code JS compilé</td>
+            <td>❌ Aucune (effacée après vérification TypeScript)</td>
+            <td>✅ Oui (génère une fonction constructeur ES6)</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Méthodes et getters (<code>getFullName()</code>)</td>
+            <td>❌ Signatures uniquement (pas d'implémentation)</td>
+            <td>✅ Oui, directement appelables sur l'instance</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Valeurs par défaut à la création</td>
+            <td>❌ Non</td>
+            <td>✅ Oui, via le <code>constructor</code></td>
+          </tr>
+          <tr>
+            <td class="font-bold">Compatibilité directe avec <code>http.get&lt;T&gt;()</code></td>
+            <td>✅ Immédiate (le JSON respecte le contrat)</td>
+            <td>⚠️ Nécessite un <code>.pipe(map(d =&gt; new Model(d)))</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 🔗 SECTION 3 : Utilisation dans les Services et Composants -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">🔗</span> 3. Exploiter vos Modèles dans Angular
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-3">
+          <h3 class="card-title text-base text-accent">Un flux typé de bout en bout</h3>
+          <p class="text-xs text-base-content/80">
+            Une fois votre modèle exporté depuis <code>src/app/models/</code>, il sert de contrat entre toutes les couches de votre application :
+          </p>
+          <ul class="list-disc list-inside text-xs space-y-1.5 text-base-content/70">
+            <li><strong>Dans les Services :</strong> type les retours de <code>HttpClient</code> (<code>get&lt;User[]&gt;</code>) et les paramètres envoyés (<code>CreateUserDto</code>).</li>
+            <li><strong>Dans les Signals :</strong> garantit le type contenu dans <code>signal&lt;User[]&gt;([])</code>.</li>
+            <li><strong>Dans les Composants enfants :</strong> sécurise les entrées via <code>input.required&lt;User&gt;()</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">
+          Importation dans un Service et un Composant :
+        </span>
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="usageInAngularCode | shiki:'typescript':'vitesse-dark' | async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 💡 Synthèse -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body">
+      <h3 class="card-title text-primary mb-2">🎯 Bonnes pratiques à retenir</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mt-2">
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-success block mb-1">1. Interface par défaut</span>
+          Pour représenter des données provenant d'une API REST ou de Firebase, privilégiez toujours <code>export interface</code> : c'est plus léger et idiomatique en Angular.
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-info block mb-1">2. Types Utilitaires (DTO)</span>
+          Utilisez <code>Omit&lt;User, 'id'&gt;</code> pour la création et <code>Partial&lt;User&gt;</code> pour la mise à jour au lieu de créer 3 interfaces quasi identiques.
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-warning block mb-1">3. Pas de préfixe "I"</span>
+          Selon le guide de style officiel TypeScript / Angular, nommez votre interface <code>User</code> et non <code>IUser</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
