@@ -8,6 +8,19 @@
             Données fournies par <code>prevision-meteo.ch</code> via <code>MeteoService</code>
           </p>
         </div>
+        <div class="join">
+          <input
+            type="text"
+            class="input join-item"
+            placeholder="Ville"
+            name="citySearch"
+            [(ngModel)]="citySearch"
+            (keydown.enter)="loadMeteo(citySearch())"
+          />
+          <button type="button" class="btn btn-primary join-item" (click)="loadMeteo(citySearch())">
+            Rechercher
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -15,6 +28,10 @@
   @if (isLoading()) {
     <div class="flex justify-center">
       <span class="loading loading-spinner loading-lg text-primary"></span>
+    </div>
+  } @else if (errorMessage()) {
+    <div role="alert" class="alert alert-error">
+      <span>{{ errorMessage() }}</span>
     </div>
   } @else if (meteoData(); as meteo) {
     <div class="card bg-base-100 border border-base-300 shadow-sm">
@@ -44,6 +61,25 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <h2 class="text-2xl font-bold text-secondary">Prévisions sur 5 jours</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        @for (day of forecastDays(); track day.date) {
+          <div class="card bg-base-100 border border-base-300 shadow-sm">
+            <div class="card-body items-center text-center p-4">
+              <h3 class="font-bold text-primary">{{ day.day_short }}</h3>
+              <p class="text-xs text-base-content/60">{{ day.date }}</p>
+              <img class="w-12" [src]="day.icon" [alt]="day.condition" />
+              <p class="font-mono font-bold">
+                <span class="text-info">{{ day.tmin }}°</span> /
+                <span class="text-error">{{ day.tmax }}°</span>
+              </p>
+            </div>
+          </div>
+        }
       </div>
     </div>
   }

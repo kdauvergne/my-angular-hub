@@ -8,7 +8,8 @@ export class MeteoService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = 'https://prevision-meteo.ch/services/json';
 
-  getMeteoByCity(city: string): Observable<MeteoResponse> {
-    return this.http.get<MeteoResponse>(`${this.apiUrl}/${city}`);
+  getMeteoByCity(city: string = 'toulouse'): Observable<MeteoResponse> {
+    const formattedCity = city.trim().toLowerCase() || 'toulouse';
+    return this.http.get<MeteoResponse>(`${this.apiUrl}/${encodeURIComponent(formattedCity)}`);
   }
 }
