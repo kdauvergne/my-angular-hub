@@ -28,5 +28,11 @@
         max="100"
       ></progress>
     </div>
+
+    <button type="button" class="btn btn-primary btn-block" (click)="statusChange.emit()">
+      {{ isAdopted() ? 'Déjà adopté' : 'Adopter' }}
+    </button>
+    <button type="button" class="btn btn-sm" (click)="energyChange.emit(10)">Jouer</button>
+    <button type="button" class="btn btn-sm" (click)="energyChange.emit(-10)">Sieste</button>
   </div>
 </div>

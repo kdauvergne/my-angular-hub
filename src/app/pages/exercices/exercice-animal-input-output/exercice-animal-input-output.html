@@ -1,0 +1,30 @@
+<div class="max-w-6xl mx-auto my-10 p-4 space-y-6">
+  <!-- Journal d'événements du Parent -->
+  <div role="alert" class="alert bg-base-100 border border-base-300 shadow-sm">
+    <span class="text-2xl">📜</span>
+    <div>
+      <h3 class="font-bold">Log du parent</h3>
+      <p class="text-sm">{{ lastActionLog() }}</p>
+    </div>
+  </div>
+
+  <div class="alert bg-base-100 border border-base-300 shadow-sm">
+    <span class="badge badge-accent">Animaux adoptés : {{ adoptedCount() }}</span>
+    <span class="badge badge-info">Animaux disponibles : {{ availableCount() }}</span>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (animal of animals(); track animal.id) {
+      <app-animal-card
+        [id]="animal.id"
+        [name]="animal.name"
+        [species]="animal.species"
+        [age]="animal.age"
+        [energyLevel]="animal.energyLevel"
+        [isAdopted]="animal.isAdopted"
+        (statusChange)="handleStatusChange(animal.id)"
+        (energyChange)="handleEnergyChange(animal.id, $event)"
+      />
+    }
+  </div>
+</div>

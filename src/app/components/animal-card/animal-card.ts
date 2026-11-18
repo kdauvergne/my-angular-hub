@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 
 export interface Animal {
   id: number;
@@ -16,7 +16,7 @@ export interface Animal {
   templateUrl: './animal-card.html',
 })
 export class AnimalCard {
-  // propriétés d'entrée nécessaires (input)
+  //* propriétés d'entrée nécessaires (input)
   id = input.required<number>();
   name = input.required<string>();
   species = input.required<string>();
@@ -43,4 +43,12 @@ export class AnimalCard {
   // âge ('an' ou 'ans')
 
   accordAge = computed(() => (this.age() > 1 ? `${this.age()} ans` : `${this.age()} an`));
+
+  //* sorties d'évènement (output)
+
+  // basculer la statut d'adoption
+  statusChange = output<void>();
+
+  // modifier le niveau d'énergie
+  energyChange = output<number>();
 }
