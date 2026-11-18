@@ -1,43 +1,103 @@
-<div class="max-w-6xl mx-auto my-10 p-4 space-y-8">
-  <div class="flex flex-wrap items-start justify-between gap-4">
+<div class="max-w-6xl mx-auto my-10 p-4 space-y-6">
+  <!-- En-tête -->
+  <div class="flex flex-wrap items-center justify-between gap-4 border-b border-base-300 pb-4">
     <div>
-      <h1 class="text-3xl font-extrabold text-primary">Boutique &amp; Panier Réactif</h1>
+      <h1 class="text-3xl font-extrabold text-primary">🛒 Boutique &amp; Panier Réactif</h1>
       <p class="text-sm text-base-content/70">
-        Modélisation TypeScript et gestion d'état centralisée via <code>CartService</code>.
+        Exercice pratique : modélisation TypeScript stricte et gestion d'état centralisée via
+        <code>CartService</code>.
       </p>
     </div>
+
     <div class="indicator">
-      <span class="indicator-item badge badge-secondary">{{ cartService.totalQuantity() }}</span>
-      <span class="btn btn-sm btn-outline">Panier : {{ cartService.subtotal().toFixed(2) }} €</span>
+      <span class="indicator-item badge badge-secondary font-bold">
+        {{ cartService.totalQuantity() }}
+      </span>
+      <div class="btn btn-outline btn-sm pointer-events-none">
+        Panier : {{ cartService.total().toFixed(2) }} €
+      </div>
     </div>
   </div>
 
-  <div class="divider my-0"></div>
+  @if (orderConfirmed()) {
+    <div role="alert" class="alert alert-success shadow-md">
+      <span>✅ Commande validée ! Votre panier a été réinitialisé par le service.</span>
+    </div>
+  }
 
+  <!-- Filtres par catégorie -->
   <div class="flex flex-wrap gap-2">
-    <button type="button" class="btn btn-sm btn-primary">Tout ({{ products.length }})</button>
-    <button type="button" class="btn btn-sm">Matériel</button>
-    <button type="button" class="btn btn-sm">Formations</button>
-    <button type="button" class="btn btn-sm">Goodies</button>
+    <button
+      type="button"
+      class="btn btn-xs"
+      [class.btn-primary]="selectedCategory() === 'all'"
+      (click)="selectedCategory.set('all')"
+    >
+      Tout ({{ products().length }})
+    </button>
+    <button
+      type="button"
+      class="btn btn-xs"
+      [class.btn-primary]="selectedCategory() === 'hardware'"
+      (click)="selectedCategory.set('hardware')"
+    >
+      Matériel
+    </button>
+    <button
+      type="button"
+      class="btn btn-xs"
+      [class.btn-primary]="selectedCategory() === 'formation'"
+      (click)="selectedCategory.set('formation')"
+    >
+      Formations
+    </button>
+    <button
+      type="button"
+      class="btn btn-xs"
+      [class.btn-primary]="selectedCategory() === 'goodies'"
+      (click)="selectedCategory.set('goodies')"
+    >
+      Goodies
+    </button>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-    <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-      @for (product of products; track product.id) {
-        <div class="card bg-base-100 border border-base-300 shadow-sm">
-          <div class="card-body space-y-2">
-            <div class="flex items-start justify-between">
+  <!-- Grille principale : Catalogue (gauche) + Panier (droite) -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+    <!-- Catalogue des produits -->
+    <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      @for (product of filteredProducts(); track product.id) {
+        @let inCartQty = getQuantityInCart(product.id);
+        @let remainingStock = product.stock - inCartQty;
+
+        <div class="card bg-base-100 shadow-md border border-base-300">
+          <div class="card-body p-5 space-y-3">
+            <div class="flex items-start justify-between gap-2">
               <span class="text-4xl">{{ product.icon }}</span>
-              <span class="badge badge-ghost font-mono uppercase">{{ product.category }}</span>
+              <span class="badge badge-ghost badge-sm uppercase font-mono">
+                {{ product.category }}
+              </span>
             </div>
-            <h2 class="card-title">{{ product.name }}</h2>
-            <p class="text-2xl font-bold text-primary">{{ product.price.toFixed(2) }} €</p>
-            <div class="divider my-0"></div>
-            <div class="flex items-center justify-between">
-              <span class="text-sm text-base-content/70">Stock : {{ product.stock }}</span>
+
+            <div>
+              <h2 class="card-title text-base">{{ product.name }}</h2>
+              <p class="text-lg font-extrabold text-primary mt-1">
+                {{ product.price.toFixed(2) }} €
+              </p>
+            </div>
+
+            <div class="flex items-center justify-between pt-2 border-t border-base-200">
+              <span
+                class="text-xs font-medium"
+                [class.text-error]="remainingStock === 0"
+                [class.text-base-content/70]="remainingStock > 0"
+              >
+                {{ remainingStock > 0 ? 'Stock restant : ' + remainingStock : 'Rupture de stock' }}
+              </span>
+
               <button
                 type="button"
                 class="btn btn-primary btn-sm"
+                [disabled]="remainingStock === 0"
                 (click)="cartService.addProduct(product)"
               >
                 + Ajouter
@@ -48,63 +108,111 @@
       }
     </div>
 
-    <!-- Panier -->
-    <div class="card bg-base-200 shadow-sm">
-      <div class="card-body space-y-4">
-        <div class="flex items-center justify-between">
-          <h2 class="card-title text-secondary">Votre Panier</h2>
-          <button
-            type="button"
-            class="btn btn-ghost btn-xs text-error"
-            (click)="cartService.clearCart()"
-          >
-            Vider
-          </button>
+    <!-- Panier (Piloté par CartService) -->
+    <div class="card bg-base-200 shadow-lg border border-base-300 lg:sticky lg:top-4">
+      <div class="card-body p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-base-300 pb-2">
+          <h2 class="card-title text-lg text-secondary">🧾 Votre Panier</h2>
+          @if (cartService.items().length > 0) {
+            <button
+              type="button"
+              class="btn btn-ghost btn-xs text-error"
+              (click)="cartService.clearCart()"
+            >
+              Vider
+            </button>
+          }
         </div>
 
-        @for (item of cartService.items(); track item.product.id) {
-          <div class="flex items-center justify-between gap-2 p-3 bg-base-100 rounded-box">
-            <div>
-              <p class="text-sm font-semibold">{{ item.product.icon }} {{ item.product.name }}</p>
-              <p class="text-xs font-mono text-base-content/60">
-                {{ item.product.price.toFixed(2) }} € × {{ item.quantity }}
-              </p>
+        <!-- Liste des articles -->
+        <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
+          @for (item of cartService.items(); track item.product.id) {
+            <div
+              class="bg-base-100 p-3 rounded-lg border border-base-300 flex items-center justify-between gap-2 text-xs"
+            >
+              <div class="min-w-0 flex-1">
+                <p class="font-bold truncate">{{ item.product.icon }} {{ item.product.name }}</p>
+                <p class="text-base-content/70 font-mono">
+                  {{ item.product.price.toFixed(2) }} € × {{ item.quantity }}
+                </p>
+              </div>
+
+              <div class="join">
+                <button
+                  type="button"
+                  class="btn btn-xs join-item"
+                  (click)="cartService.updateQuantity(item.product.id, -1)"
+                >
+                  −
+                </button>
+                <span class="btn btn-xs join-item no-animation pointer-events-none font-mono">
+                  {{ item.quantity }}
+                </span>
+                <button
+                  type="button"
+                  class="btn btn-xs join-item"
+                  [disabled]="item.quantity >= item.product.stock"
+                  (click)="cartService.updateQuantity(item.product.id, 1)"
+                >
+                  +
+                </button>
+              </div>
             </div>
-            <div class="join">
-              <button
-                type="button"
-                class="btn btn-xs join-item"
-                (click)="cartService.updateQuantity(item.product.id, -1)"
-              >
-                -
-              </button>
-              <span class="btn btn-xs join-item">{{ item.quantity }}</span>
-              <button
-                type="button"
-                class="btn btn-xs join-item"
-                (click)="cartService.updateQuantity(item.product.id, 1)"
-              >
-                +
-              </button>
+          } @empty {
+            <p
+              class="text-center py-8 text-xs text-base-content/60 border border-dashed border-base-300 rounded-lg"
+            >
+              Votre panier est vide.
+            </p>
+          }
+        </div>
+
+        <!-- Code Promo -->
+        @if (cartService.items().length > 0) {
+          <form (submit)="submitPromo($event)" class="space-y-1">
+            <div class="join w-full">
+              <input
+                type="text"
+                placeholder="Code promo (ex: ADRAR20)"
+                class="input input-bordered input-xs join-item flex-1 uppercase font-mono"
+                [value]="promoInput()"
+                (input)="onPromoInput($event)"
+              />
+              <button type="submit" class="btn btn-secondary btn-xs join-item">Appliquer</button>
+            </div>
+            @if (promoStatus() === 'valid') {
+              <p class="text-xs text-success font-medium">✓ Réduction de 20 % appliquée !</p>
+            } @else if (promoStatus() === 'invalid') {
+              <p class="text-xs text-error">✗ Code invalide (essayez ADRAR20).</p>
+            }
+          </form>
+
+          <!-- Récapitulatif financier -->
+          <div class="border-t border-base-300 pt-3 space-y-1 text-xs">
+            <div class="flex justify-between">
+              <span class="text-base-content/70">Sous-total :</span>
+              <span class="font-mono">{{ cartService.subtotal().toFixed(2) }} €</span>
+            </div>
+
+            @if (cartService.discount() > 0) {
+              <div class="flex justify-between text-success font-medium">
+                <span>Remise ({{ cartService.promoCode() }}) :</span>
+                <span class="font-mono">-{{ cartService.discount().toFixed(2) }} €</span>
+              </div>
+            }
+
+            <div
+              class="flex justify-between text-base font-extrabold text-primary pt-1 border-t border-base-300"
+            >
+              <span>Total TTC :</span>
+              <span class="font-mono">{{ cartService.total().toFixed(2) }} €</span>
             </div>
           </div>
-        } @empty {
-          <p class="text-sm text-base-content/60">Votre panier est vide.</p>
+
+          <button type="button" class="btn btn-primary btn-sm w-full" (click)="checkout()">
+            Valider la commande
+          </button>
         }
-
-        <!-- Récapitulatif -->
-        <ul class="text-sm">
-          <li class="flex justify-between py-2 border-b border-base-300">
-            <span>Sous-total</span>
-            <span class="font-mono">{{ cartService.subtotal().toFixed(2) }} €</span>
-          </li>
-          <li class="flex justify-between py-2 text-lg font-bold text-primary">
-            <span>Total TTC</span>
-            <span class="font-mono">{{ cartService.subtotal().toFixed(2) }} €</span>
-          </li>
-        </ul>
-
-        <button type="button" class="btn btn-primary btn-block">Valider la commande</button>
       </div>
     </div>
   </div>

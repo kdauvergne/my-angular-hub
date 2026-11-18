@@ -1,55 +1,73 @@
-import { computed, Service, signal } from '@angular/core';
+import { Service, computed, signal } from '@angular/core';
 import { CartItem, Product } from '../models/shop.model';
 
 @Service()
 export class CartService {
+  // État privé : impossible à modifier directement depuis un composant
   private readonly _items = signal<CartItem[]>([]);
+  private readonly _promoCode = signal<string | null>(null);
+
+  // Exposition publique en lecture seule
   readonly items = this._items.asReadonly();
+  readonly promoCode = this._promoCode.asReadonly();
 
-  totalQuantity = computed(() => this._items().reduce((total, item) => total + item.quantity, 0));
-
-  subtotal = computed(() =>
-    this._items().reduce((total, item) => total + item.product.price * item.quantity, 0),
+  // Valeurs dérivées calculées automatiquement
+  readonly totalQuantity = computed(() =>
+    this._items().reduce((sum, item) => sum + item.quantity, 0),
   );
 
+  readonly subtotal = computed(() =>
+    this._items().reduce((sum, item) => sum + item.product.price * item.quantity, 0),
+  );
+
+  readonly discount = computed(() => (this._promoCode() === 'ADRAR20' ? this.subtotal() * 0.2 : 0));
+
+  readonly total = computed(() => Math.max(0, this.subtotal() - this.discount()));
+
   addProduct(product: Product): void {
-    const items = [...this._items()];
-    const existing = items.find((item) => item.product.id === product.id);
+    this._items.update((currentItems) => {
+      const existing = currentItems.find((item) => item.product.id === product.id);
 
-    if (existing) {
-      if (existing.quantity >= product.stock) return;
-      existing.quantity++;
-    } else {
-      if (product.stock <= 0) return;
-      items.push({ product, quantity: 1 });
-    }
+      if (existing) {
+        if (existing.quantity >= product.stock) return currentItems;
+        return currentItems.map((item) =>
+          item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item,
+        );
+      }
 
-    this._items.set(items);
+      if (product.stock <= 0) return currentItems;
+      return [...currentItems, { product, quantity: 1 }];
+    });
   }
 
   updateQuantity(productId: number, delta: number): void {
-    const items = [...this._items()];
-    const existing = items.find((item) => item.product.id === productId);
-
-    if (!existing) return;
-
-    const newQuantity = existing.quantity + delta;
-
-    if (newQuantity <= 0) {
-      this.removeProduct(productId);
-      return;
-    }
-    if (newQuantity > existing.product.stock) return;
-
-    existing.quantity = newQuantity;
-    this._items.set(items);
+    this._items.update((currentItems) =>
+      currentItems
+        .map((item) => {
+          if (item.product.id !== productId) return item;
+          const nextQty = Math.min(item.product.stock, item.quantity + delta);
+          return { ...item, quantity: nextQty };
+        })
+        .filter((item) => item.quantity > 0),
+    );
   }
 
   removeProduct(productId: number): void {
-    this._items.update((list) => list.filter((item) => item.product.id !== productId));
+    this._items.update((items) => items.filter((item) => item.product.id !== productId));
+  }
+
+  applyPromoCode(rawCode: string): boolean {
+    const normalized = rawCode.trim().toUpperCase();
+    if (normalized === 'ADRAR20') {
+      this._promoCode.set(normalized);
+      return true;
+    }
+    this._promoCode.set(null);
+    return false;
   }
 
   clearCart(): void {
     this._items.set([]);
+    this._promoCode.set(null);
   }
 }
