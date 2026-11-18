@@ -109,4 +109,10 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceShopCartService,
       ),
   },
+  {
+    path: 'exercice-animal-input',
+    title: 'Animal input',
+    loadComponent: () =>
+      import('./exercice-animal-input/exercice-animal-input').then((m) => m.ExerciceAnimalInput),
+  },
 ];

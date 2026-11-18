@@ -1,0 +1,14 @@
+<div class="max-w-6xl mx-auto my-10 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  @for (animal of animals(); track animal.id) {
+    <app-animal-card
+      [id]="animal.id"
+      [name]="animal.name"
+      [species]="animal.species"
+      [age]="animal.age"
+      [energyLevel]="animal.energyLevel"
+      [isAdopted]="animal.isAdopted"
+    />
+  }
+
+  <app-animal-card [id]="7" name="Nouvel arrivant" species="hamster" />
+</div>
