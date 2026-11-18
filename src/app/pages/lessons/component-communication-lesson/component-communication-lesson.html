@@ -1,0 +1,119 @@
+<div class="max-w-6xl mx-auto my-10 space-y-10 p-4">
+  <!-- 🟦 En-tête -->
+  <div class="text-center space-y-2">
+    <h1 class="text-4xl font-extrabold text-primary">
+      🔗 Communication inter-composants : Inputs & Outputs
+    </h1>
+    <p class="text-lg text-base-content/70 max-w-3xl mx-auto">
+      Transmettez des données du composant Parent vers l'Enfant (<strong>Inputs</strong>) et faites
+      remonter des événements de l'Enfant vers le Parent (<strong>Outputs</strong>).
+    </p>
+  </div>
+
+  <!-- 🧪 Démo Interactive -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body space-y-4">
+      <h2 class="card-title text-secondary">🧪 Démo en direct</h2>
+      <p class="text-sm text-base-content/70">
+        Le composant Parent transmet chaque objet <code>user</code> à
+        <code>&lt;app-user-card-lesson&gt;</code> via un Input. Lorsque vous cliquez sur "Changer
+        statut", l'enfant émet un Output intercepté par le Parent.
+      </p>
+
+      <!-- Liste des composants enfants -->
+      <div class="space-y-3 my-2">
+        @for (u of users(); track u.id) {
+          <app-user-card-lesson [user]="u" (statusChange)="handleStatusChange($event)">
+          </app-user-card-lesson>
+        }
+      </div>
+
+      <!-- Journal d'événements du Parent -->
+      <div class="alert alert-neutral text-xs shadow">
+        <span>📜 <strong>Log du Parent :</strong> {{ lastActionLog() }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⚔️ Comparatif historique vs moderne -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+    <!-- Décorateurs Historiques -->
+    <div class="card bg-base-100 shadow-xl border-2 border-warning/40">
+      <div class="card-body space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="card-title text-warning">Décorateurs Historiques</h2>
+          <span class="badge badge-warning badge-outline">Angular 2 à 17</span>
+        </div>
+
+        <p class="text-xs text-base-content/70">
+          Utilise <code>&#64;Input()</code> pour la réception et
+          <code>&#64;Output() new EventEmitter()</code> pour l'émission. Standard encore très
+          répandu en entreprise.
+        </p>
+
+        <!-- Code Shiki -->
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1"
+            >Code Composant Enfant :</span
+          >
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="decoratorCode | shiki: 'typescript' : 'vitesse-dark' | async"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signals / Modern -->
+    <div class="card bg-base-100 shadow-xl border-2 border-success/40">
+      <div class="card-body space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="card-title text-success">Syntaxe Signal / Fonctionnelle</h2>
+          <span class="badge badge-success text-white">Angular 17.1+ / 22</span>
+        </div>
+
+        <p class="text-xs text-base-content/70">
+          Utilise <code>input()</code> (un Signal en lecture seule) et <code>output()</code> (plus
+          performant et sans surcharge RxJS/EventEmitter).
+        </p>
+
+        <!-- Code Shiki -->
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1"
+            >Code Composant Enfant :</span
+          >
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="signalCode | shiki: 'typescript' : 'vitesse-dark' | async"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 💡 Synthèse -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body">
+      <h3 class="card-title text-primary mb-4">🎯 Synthèse pour les développeurs</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <div class="font-bold text-secondary mb-1">📥 Passage de données (Parent ➔ Enfant)</div>
+          <p class="text-xs text-base-content/70">
+            Côté template HTML du parent, on utilise le <strong>Property Binding</strong> avec des
+            crochets : <code ngNonBindable>[user]="valeur"</code>.
+          </p>
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <div class="font-bold text-accent mb-1">📤 Remontée d'événements (Enfant ➔ Parent)</div>
+          <p class="text-xs text-base-content/70">
+            Côté template HTML du parent, on utilise le <strong>Event Binding</strong> avec des
+            parenthèses : <code ngNonBindable>(statusChange)="maMethode($event)"</code>. La variable
+            spéciale <code>$event</code> contient la donnée transmise par <code>.emit()</code>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

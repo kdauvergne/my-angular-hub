@@ -73,4 +73,12 @@ export const LESSONS_ROUTES: Routes = [
         (m) => m.ServicesInjectionLesson,
       ),
   },
+  {
+    path: 'component-communication-lesson',
+    title: 'Component communication',
+    loadComponent: () =>
+      import('./component-communication-lesson/component-communication-lesson').then(
+        (m) => m.ComponentCommunicationLesson,
+      ),
+  },
 ];
