@@ -123,4 +123,12 @@ export const EXERCICES_ROUTES: Routes = [
         (m) => m.ExerciceAnimalInputOutput,
       ),
   },
+  {
+    path: 'exercice-task-list-firebase',
+    title: 'Task list Firebase',
+    loadComponent: () =>
+      import('./exercice-task-list-firebase/exercice-task-list-firebase').then(
+        (m) => m.ExerciceTaskListFirebase,
+      ),
+  },
 ];
