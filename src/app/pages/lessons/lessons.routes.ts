@@ -86,4 +86,10 @@ export const LESSONS_ROUTES: Routes = [
     title: 'Router',
     loadComponent: () => import('./router-lesson/router-lesson').then((m) => m.RouterLesson),
   },
+  {
+    path: 'environments-lesson',
+    title: 'Environments',
+    loadComponent: () =>
+      import('./environments-lesson/environments-lesson').then((m) => m.EnvironmentsLesson),
+  },
 ];
