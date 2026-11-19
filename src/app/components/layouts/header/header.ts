@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Route, RouterLink } from '@angular/router';
 import { EXERCICES_ROUTES } from '../../../pages/exercices/exercices.routes';
 import { LESSONS_ROUTES } from '../../../pages/lessons/lessons.routes';
+import { TP_ROUTES } from '../../../pages/tp/tp.routes';
 
 @Component({
   imports: [RouterLink],
@@ -12,4 +13,5 @@ import { LESSONS_ROUTES } from '../../../pages/lessons/lessons.routes';
 export class Header {
   lessons: Route[] = LESSONS_ROUTES;
   exercices: Route[] = EXERCICES_ROUTES;
+  tps: Route[] = TP_ROUTES;
 }

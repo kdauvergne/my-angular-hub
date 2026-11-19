@@ -19,6 +19,10 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./pages/exercices/exercices.routes').then((m) => m.EXERCICES_ROUTES),
   },
+  {
+    path: 'tp',
+    loadChildren: () => import('./pages/tp/tp.routes').then((m) => m.TP_ROUTES),
+  },
 
   // ! Page not found
 
