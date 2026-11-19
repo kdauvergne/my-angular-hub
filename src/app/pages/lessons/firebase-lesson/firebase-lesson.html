@@ -1,0 +1,471 @@
+<div class="max-w-6xl mx-auto my-10 space-y-10 p-4">
+  <!-- 🟦 En-tête -->
+  <div class="text-center space-y-2">
+    <h1 class="text-4xl font-extrabold text-primary">🔥 Firebase &amp; &#64;angular/fire (BaaS)</h1>
+    <p class="text-lg text-base-content/70 max-w-3xl mx-auto">
+      Déployez une application full-stack temps réel sans gérer de serveur grâce au modèle
+      <strong>Backend-as-a-Service (BaaS)</strong> de Google et son intégration officielle Angular.
+    </p>
+  </div>
+
+  <!-- 🟨 SECTION 0 : Concept de BaaS & Wrapper @angular/fire -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">☁️</span> 1. Le modèle BaaS &amp; le Wrapper
+      <code>&#64;angular/fire</code>
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="card bg-base-100 shadow-lg border-t-4 border-warning">
+        <div class="card-body p-5 space-y-1">
+          <h3 class="card-title text-base text-warning">🚀 Qu'est-ce qu'un BaaS ?</h3>
+          <p class="text-xs text-base-content/80">
+            Un <strong>Backend-as-a-Service</strong> fournit une infrastructure serveur prête à
+            l'emploi (authentification, bases de données, stockage de fichiers, hébergement)
+            consommable directement depuis le front-end via un SDK sécurisé.
+          </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-lg border-t-4 border-primary">
+        <div class="card-body p-5 space-y-1">
+          <h3 class="card-title text-base text-primary">
+            🅰️ Pourquoi <code>&#64;angular/fire</code> ?
+          </h3>
+          <p class="text-xs text-base-content/80">
+            C'est la bibliothèque officielle qui enveloppe le SDK JavaScript de Firebase pour
+            l'adapter à l'écosystème Angular :
+            <strong>Injection de dépendances</strong> (<code>inject()</code>), flux
+            <strong>RxJS</strong> compatibles <code>toSignal()</code>, et support du SSR.
+          </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-lg border-t-4 border-success">
+        <div class="card-body p-5 space-y-1">
+          <h3 class="card-title text-base text-success">⚡ Synchronisation Temps Réel</h3>
+          <p class="text-xs text-base-content/80">
+            Contrairement à une API REST classique (requête/réponse ponctuelle), Firebase maintient
+            un canal ouvert (WebSockets) : toute modification en base met instantanément à jour
+            l'interface de tous les utilisateurs connectés.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🧪 SIMULATEUR INTERACTIF BAAS -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body space-y-5">
+      <div class="flex flex-wrap justify-between items-center gap-3 border-b border-base-300 pb-3">
+        <div>
+          <h2 class="card-title text-secondary">
+            🧪 Bac à Sable BaaS : Auth, Bases de données &amp; Storage
+          </h2>
+          <p class="text-xs text-base-content/70">
+            Testez l'interaction entre <strong>Firebase Auth</strong> (Règles de sécurité) et les
+            services d'écriture <strong>Firestore</strong>, <strong>Realtime DB</strong> et
+            <strong>Storage</strong>.
+          </p>
+        </div>
+
+        <!-- Contrôle Auth -->
+        <div
+          class="flex items-center gap-3 bg-base-100 px-4 py-2 rounded-xl border border-base-300"
+        >
+          @if (currentUser()) {
+            <div class="text-xs">
+              <span class="badge badge-success badge-xs mr-1"></span>
+              <span class="font-mono font-bold">{{ currentUser()?.email }}</span>
+            </div>
+            <button class="btn btn-xs btn-outline btn-error" (click)="toggleSimulateAuth()">
+              Déconnexion
+            </button>
+          } @else {
+            <span class="text-xs text-base-content/60">Non authentifié</span>
+            <button class="btn btn-xs btn-primary" (click)="toggleSimulateAuth()">
+              🔑 Simuler Connexion
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Alerte Security Rules -->
+      @if (securityAlert()) {
+        <div class="alert alert-error text-xs shadow-sm">
+          <span>{{ securityAlert() }}</span>
+        </div>
+      }
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 1. Simulateur Firestore -->
+        <div class="bg-base-100 p-4 rounded-xl border border-base-300 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-sm text-primary">📄 Cloud Firestore</span>
+            <span class="badge badge-ghost badge-xs font-mono">collection('courses')</span>
+          </div>
+
+          <form (submit)="simulateAddFirestoreDoc($event)" class="join w-full">
+            <input
+              type="text"
+              placeholder="Nouveau document..."
+              class="input input-bordered input-xs join-item flex-1"
+              [value]="newDocTitle()"
+              (input)="updateDocTitle($event)"
+            />
+            <button type="submit" class="btn btn-primary btn-xs join-item">addDoc()</button>
+          </form>
+
+          <div class="space-y-1.5 max-h-40 overflow-y-auto">
+            @for (doc of firestoreDocs(); track doc.id) {
+              <div class="p-2 bg-base-200 rounded text-xs flex justify-between items-center">
+                <div>
+                  <p class="font-semibold">{{ doc.title }}</p>
+                  <span class="text-[10px] opacity-60 font-mono"
+                    >{{ doc.id }} • {{ doc.author }}</span
+                  >
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- 2. Simulateur Realtime Database -->
+        <div class="bg-base-100 p-4 rounded-xl border border-base-300 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-sm text-accent">🌳 Realtime Database</span>
+            <span class="badge badge-ghost badge-xs font-mono">/users_presence</span>
+          </div>
+
+          <div class="flex gap-1.5">
+            <button
+              class="btn btn-xs btn-outline btn-success flex-1"
+              (click)="simulatePushRtdb('🟢 En ligne')"
+            >
+              push(En ligne)
+            </button>
+            <button
+              class="btn btn-xs btn-outline btn-warning flex-1"
+              (click)="simulatePushRtdb('🟡 Absent')"
+            >
+              push(Absent)
+            </button>
+          </div>
+
+          <div
+            class="bg-neutral text-neutral-content p-2.5 rounded-lg font-mono text-[11px] space-y-1 max-h-40 overflow-y-auto"
+          >
+            @for (node of rtdbNodes(); track node.key) {
+              <div>
+                <span class="text-accent">"{{ node.key }}"</span>: &#123; status: "{{
+                  node.status
+                }}", at: "{{ node.updatedAt }}" &#125;
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- 3. Simulateur Cloud Storage -->
+        <div
+          class="bg-base-100 p-4 rounded-xl border border-base-300 space-y-3 flex flex-col justify-between"
+        >
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-sm text-secondary">📦 Cloud Storage</span>
+              <span class="badge badge-ghost badge-xs font-mono">/avatars</span>
+            </div>
+            <p class="text-[11px] text-base-content/70">
+              Envoi de fichiers binaires (images, PDF) avec suivi de progression.
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <button
+              class="btn btn-secondary btn-xs w-full"
+              (click)="simulateStorageUpload()"
+              [disabled]="isUploading()"
+            >
+              {{ isUploading() ? 'Téléversement en cours...' : '⬆️ Uploader profil.webp' }}
+            </button>
+
+            @if (uploadProgress() > 0) {
+              <div class="space-y-1">
+                <div class="flex justify-between text-[10px] font-mono">
+                  <span>uploadBytesResumable</span>
+                  <span>{{ uploadProgress() }}%</span>
+                </div>
+                <progress
+                  class="progress progress-secondary w-full"
+                  [value]="uploadProgress()"
+                  max="100"
+                ></progress>
+              </div>
+            }
+
+            @if (uploadedFileUrl()) {
+              <div
+                class="p-2 bg-success/10 border border-success/30 rounded text-[10px] font-mono break-all text-success"
+              >
+                ✅ URL générée : {{ uploadedFileUrl() }}
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⚙️ SECTION 2 : Installation & Configuration -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">⚙️</span> 2. Installation &amp; Configuration
+      (<code>app.config.ts</code>)
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-3">
+          <h3 class="card-title text-base text-primary">Architecture Modulaire (Tree-Shakeable)</h3>
+          <p class="text-xs text-base-content/80">
+            La commande <code>ng add &#64;angular/fire</code> installe le paquet et configure
+            automatiquement votre projet. Vous n'importez que les providers dont vous avez
+            réellement besoin afin de garder un bundle léger.
+          </p>
+
+          <ul class="space-y-2 text-xs">
+            <li class="p-2.5 bg-base-200 rounded-lg">
+              <span class="font-bold text-primary">1. <code>provideFirebaseApp(...)</code> :</span>
+              Initialise la connexion avec les clés de votre projet (<code>apiKey</code>,
+              <code>projectId</code>, etc.) stockées dans <code>environment.ts</code>.
+            </li>
+            <li class="p-2.5 bg-base-200 rounded-lg">
+              <span class="font-bold text-secondary">2. Providers par service :</span>
+              <code>provideAuth</code>, <code>provideFirestore</code>,
+              <code>provideDatabase</code> et <code>provideStorage</code> rendent chaque service
+              injectable partout via <code>inject()</code>.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">
+          Enregistrement des providers Firebase (app.config.ts) :
+        </span>
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="setupConfigCode | shiki: 'typescript' : 'vitesse-dark' | async"
+        ></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔐 SECTION 3 : Firebase Authentication -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">🔐</span> 3. Authentification (<code>&#64;angular/fire/auth</code>)
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-3">
+          <h3 class="card-title text-base text-primary">
+            Gestion complète des sessions utilisateurs
+          </h3>
+          <p class="text-xs text-base-content/80">
+            Firebase Auth gère l'inscription, la connexion (Email/Mot de passe, Google, GitHub,
+            Apple...), la réinitialisation de mot de passe et le rafraîchissement automatique des
+            jetons <strong>JWT</strong>.
+          </p>
+
+          <div class="p-3 bg-base-200 rounded-lg text-xs space-y-1">
+            <span class="font-bold text-secondary block">Synergie avec Angular Signals :</span>
+            <p class="text-base-content/70">
+              La fonction <code>user(this.auth)</code> retourne un
+              <code>Observable&lt;User | null&gt;</code> qui émet à chaque connexion ou déconnexion.
+              En l'enveloppant dans <code>toSignal()</code>, toute votre application (Navbar,
+              Guards, Profil) réagit instantanément.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">
+          Service d'authentification (auth.service.ts) :
+        </span>
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="authCode | shiki: 'typescript' : 'vitesse-dark' | async"
+        ></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🗄️ SECTION 4 : Cloud Firestore vs Realtime Database -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">🗄️</span> 4. Les Deux Bases de Données : Firestore vs Realtime Database
+    </h2>
+
+    <!-- Tableau comparatif -->
+    <div class="overflow-x-auto bg-base-100 rounded-xl border border-base-300 shadow-sm">
+      <table class="table table-zebra text-xs">
+        <thead>
+          <tr class="bg-base-200">
+            <th>Critère</th>
+            <th class="text-primary">Cloud Firestore (Recommandé par défaut)</th>
+            <th class="text-accent">Realtime Database (Historique / Ultra-rapide)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-bold">Modèle de données</td>
+            <td>
+              Collections contenant des <strong>Documents</strong> (typés, indexés,
+              sous-collections).
+            </td>
+            <td>Un seul grand <strong>arbre JSON</strong> imbriqué.</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Requêtes &amp; Filtrage</td>
+            <td>
+              Requêtes complexes combinées (<code>where()</code>, <code>orderBy()</code>,
+              <code>limit()</code>).
+            </td>
+            <td>Tri ou filtrage limité à une seule propriété à la fois.</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Cas d'usage idéal</td>
+            <td>
+              Applications métier, catalogues produits, profils utilisateurs, réseaux sociaux.
+            </td>
+            <td>
+              Présence en ligne (en ligne/hors ligne), curseurs collaboratifs, télémétrie IoT.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Deux colonnes de code côte à côte -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start pt-2">
+      <!-- Cloud Firestore -->
+      <div class="card bg-base-100 shadow-xl border-2 border-primary/30">
+        <div class="card-body space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="card-title text-base text-primary">Cloud Firestore</h3>
+            <span class="badge badge-primary badge-outline text-xs"
+              >&#64;angular/fire/firestore</span
+            >
+          </div>
+          <p class="text-xs text-base-content/70">
+            Utilisez <code>collectionData(ref, &#123; idField: 'id' &#125;)</code> pour recevoir un
+            tableau d'objets fortement typés incluant automatiquement l'identifiant unique de chaque
+            document.
+          </p>
+
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="firestoreCode | shiki: 'typescript' : 'vitesse-dark' | async"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Realtime Database -->
+      <div class="card bg-base-100 shadow-xl border-2 border-accent/30">
+        <div class="card-body space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="card-title text-base text-accent">Realtime Database</h3>
+            <span class="badge badge-accent badge-outline text-xs">&#64;angular/fire/database</span>
+          </div>
+          <p class="text-xs text-base-content/70">
+            Pointez vers un chemin de l'arbre JSON avec <code>ref(db, 'chemin')</code>, ajoutez des
+            entrées via <code>push()</code> et écoutez la liste en direct avec
+            <code>listVal()</code>.
+          </p>
+
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="realtimeDbCode | shiki: 'typescript' : 'vitesse-dark' | async"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 📦 SECTION 5 : Cloud Storage -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">📦</span> 5. Stockage de Fichiers
+      (<code>&#64;angular/fire/storage</code>)
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-3">
+          <h3 class="card-title text-base text-secondary">Héberger images, vidéos et documents</h3>
+          <p class="text-xs text-base-content/80">
+            Les bases NoSQL (Firestore / RTDB) ne sont pas conçues pour stocker des fichiers lourds.
+            On envoie le fichier dans un <strong>Bucket Cloud Storage</strong>, puis on enregistre
+            uniquement son URL de téléchargement (<code>getDownloadURL()</code>) dans Firestore.
+          </p>
+
+          <ul class="list-disc list-inside text-xs space-y-1 text-base-content/70">
+            <li>
+              <code>ref(storage, 'chemin/fichier')</code> : cible l'emplacement dans le bucket.
+            </li>
+            <li>
+              <code>uploadBytesResumable()</code> : gère les coupures réseau et permet le suivi en
+              temps réel.
+            </li>
+            <li>
+              <code>percentage(task)</code> : Observable fourni par
+              <code>&#64;angular/fire</code> pour alimenter une barre de progression.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">
+          Upload de fichier avec barre de progression (storage.service.ts) :
+        </span>
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="storageCode | shiki: 'typescript' : 'vitesse-dark' | async"
+        ></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 💡 SECTION 6 : Bonnes pratiques & Sécurité -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body">
+      <h3 class="card-title text-primary mb-2">🎯 Règles d'or Firebase en Production</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mt-2">
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-error block mb-1">1. Firebase Security Rules</span>
+          Ne laissez jamais vos règles en mode test (<code>allow read, write: if true;</code>) en
+          production ! Protégez vos collections et buckets directement depuis la console Firebase en
+          vérifiant <code>request.auth != null</code>.
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-info block mb-1">2. Clé API publique mais encadrée</span>
+          La <code>firebaseConfig</code> présente dans le front-end identifie votre projet mais ne
+          donne aucun droit administrateur. Restreignez toutefois les domaines autorisés (HTTP
+          Referrers) dans Google Cloud Console.
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-success block mb-1">3. Éviter les lectures inutiles</span>
+          Chaque lecture de document Firestore est comptabilisée dans les quotas. Utilisez
+          <code>limit()</code> sur les listes longues et préférez <code>getDocs()</code> à
+          <code>collectionData()</code> si la donnée n'a pas besoin d'être temps réel.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

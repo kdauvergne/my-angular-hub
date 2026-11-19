@@ -92,4 +92,9 @@ export const LESSONS_ROUTES: Routes = [
     loadComponent: () =>
       import('./environments-lesson/environments-lesson').then((m) => m.EnvironmentsLesson),
   },
+  {
+    path: 'firebase-lesson',
+    title: 'Firebase',
+    loadComponent: () => import('./firebase-lesson/firebase-lesson').then((m) => m.FirebaseLesson),
+  },
 ];
