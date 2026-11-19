@@ -1,0 +1,358 @@
+<div class="max-w-6xl mx-auto my-10 space-y-10 p-4">
+  <!-- 🟦 En-tête -->
+  <div class="text-center space-y-2">
+    <h1 class="text-4xl font-extrabold text-primary">🧭 Le Routage dans Angular (Router)</h1>
+    <p class="text-lg text-base-content/70 max-w-3xl mx-auto">
+      Construisez une <strong>Single Page Application (SPA)</strong> fluide en associant des URL à
+      vos composants sans jamais recharger le navigateur.
+    </p>
+  </div>
+
+  <!-- 🧪 Simulateur Interactif de SPA -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body space-y-4">
+      <div class="flex flex-wrap justify-between items-center gap-2">
+        <div>
+          <h2 class="card-title text-secondary">🧪 Simulateur de Navigation & Guard</h2>
+          <p class="text-xs text-base-content/70">
+            Testez le comportement de <code>routerLink</code>, des paramètres dynamiques
+            <code>:id</code> et d'un <code>CanActivateFn</code>.
+          </p>
+        </div>
+
+        <label
+          class="label cursor-pointer gap-2 bg-base-100 px-3 py-1.5 rounded-lg border border-base-300"
+        >
+          <span class="label-text text-xs font-bold">
+            Utilisateur connecté (<code>authGuard</code>) :
+          </span>
+          <input
+            type="checkbox"
+            class="toggle toggle-success toggle-sm"
+            [checked]="isAuthenticated()"
+            (change)="toggleAuth()"
+          />
+        </label>
+      </div>
+
+      <!-- Barre d'adresse navigateur simulée -->
+      <div class="bg-base-100 rounded-xl border border-base-300 overflow-hidden shadow-sm">
+        <div
+          class="bg-neutral text-neutral-content px-4 py-2 flex flex-wrap items-center gap-3 text-xs font-mono"
+        >
+          <div class="flex gap-1.5">
+            <span class="w-3 h-3 rounded-full bg-error inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-warning inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-success inline-block"></span>
+          </div>
+          <div class="bg-base-100/10 px-3 py-1 rounded flex-1 truncate">
+            https://apn-angular.fr<span class="text-primary font-bold">{{ simulatedUrl() }}</span>
+          </div>
+        </div>
+
+        <!-- Barre de navigation (routerLink / routerLinkActive) -->
+        <div class="bg-base-200/70 px-4 py-2 border-b border-base-300 flex flex-wrap gap-2">
+          <button
+            class="btn btn-xs"
+            [class.btn-primary]="activeRoute() === '/home'"
+            (click)="navigate('/home')"
+          >
+            /home
+          </button>
+          <button
+            class="btn btn-xs"
+            [class.btn-primary]="activeRoute() === '/users' && selectedUserId() === 42"
+            (click)="navigate('/users', 42)"
+          >
+            /users/42
+          </button>
+          <button
+            class="btn btn-xs"
+            [class.btn-primary]="activeRoute() === '/users' && selectedUserId() === 99"
+            (click)="navigate('/users', 99)"
+          >
+            /users/99
+          </button>
+          <button
+            class="btn btn-xs"
+            [class.btn-primary]="activeRoute() === '/admin'"
+            (click)="navigate('/admin')"
+          >
+            🔒 /admin
+          </button>
+          <button
+            class="btn btn-xs btn-ghost"
+            [class.btn-active]="activeRoute() === '/404'"
+            (click)="navigate('/404')"
+          >
+            /page-inexistante
+          </button>
+        </div>
+
+        <!-- Alerte Guard -->
+        @if (guardMessage()) {
+          <div class="alert alert-warning rounded-none py-2 text-xs">
+            <span>{{ guardMessage() }}</span>
+          </div>
+        }
+
+        <!-- Rendu simulé de <router-outlet /> -->
+        <div class="p-6 min-h-32 flex flex-col justify-center">
+          <span
+            class="text-[10px] font-mono uppercase tracking-wider text-base-content/40 mb-2 block"
+          >
+            &lt;router-outlet /&gt; — Composant rendu :
+          </span>
+
+          @if (activeRoute() === '/home') {
+            <div class="p-4 bg-primary/10 border border-primary/30 rounded-lg">
+              <h3 class="font-bold text-primary">🏠 HomeComponent</h3>
+              <p class="text-xs text-base-content/80 mt-1">
+                Route par défaut affichée sur <code>/home</code>.
+              </p>
+            </div>
+          } @else if (activeRoute() === '/users') {
+            <div class="p-4 bg-secondary/10 border border-secondary/30 rounded-lg">
+              <h3 class="font-bold text-secondary">👤 UserDetailComponent</h3>
+              <p class="text-xs text-base-content/80 mt-1">
+                Paramètre extrait via <code>id = input.required&lt;string&gt;()</code> :
+                <span class="badge badge-secondary font-mono ml-1">{{ selectedUserId() }}</span>
+              </p>
+            </div>
+          } @else if (activeRoute() === '/admin') {
+            <div class="p-4 bg-success/10 border border-success/30 rounded-lg">
+              <h3 class="font-bold text-success">🛡️ AdminComponent (Accès autorisé)</h3>
+              <p class="text-xs text-base-content/80 mt-1">
+                Le guard <code>authGuard</code> a retourné <code>true</code>.
+              </p>
+            </div>
+          } @else {
+            <div class="p-4 bg-error/10 border border-error/30 rounded-lg">
+              <h3 class="font-bold text-error">🚧 NotFoundComponent (Route Wildcard **)</h3>
+              <p class="text-xs text-base-content/80 mt-1">
+                Aucune route correspondante trouvée : affichage de la page 404.
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⚙️ SECTION 1 : Configuration des Routes -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">🗺️</span> 1. Déclarer les Routes & Activer le Router
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-3">
+          <h3 class="card-title text-base text-primary">
+            Table de routage (<code>app.routes.ts</code>)
+          </h3>
+          <p class="text-xs text-base-content/80">
+            Chaque objet <code>Route</code> associe un chemin (<code>path</code> sans slash initial)
+            à un composant.
+          </p>
+
+          <ul class="space-y-2 text-xs">
+            <li class="p-2.5 bg-base-200 rounded-lg">
+              <span class="font-bold text-primary">Redirection initiale :</span>
+              <code>&#123; path: '', redirectTo: 'home', pathMatch: 'full' &#125;</code> redirige la
+              racine <code>/</code> vers <code>/home</code>.
+            </li>
+            <li class="p-2.5 bg-base-200 rounded-lg">
+              <span class="font-bold text-secondary"
+                >Lazy Loading (<code>loadComponent</code>) :</span
+              >
+              Télécharge le code JavaScript d'une page uniquement lorsque l'utilisateur la visite,
+              accélérant le démarrage de l'application.
+            </li>
+            <li class="p-2.5 bg-base-200 rounded-lg">
+              <span class="font-bold text-error">Route Wildcard (<code>**</code>) :</span>
+              Intercepte toutes les URL inexistantes (page 404). Elle doit impérativement être
+              placée <strong>en dernière position</strong>.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">
+          Configuration moderne (app.routes.ts & app.config.ts) :
+        </span>
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="routesConfigCode | shiki: 'typescript' : 'vitesse-dark' | async"
+        ></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔗 SECTION 2 : Navigation Déclarative & Programmatique -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">🔗</span> 2. Naviguer : Template vs TypeScript
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <!-- Navigation HTML -->
+      <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="card-title text-base text-primary">Dans le Template HTML</h3>
+            <span class="badge badge-primary badge-outline text-xs">routerLink</span>
+          </div>
+          <p class="text-xs text-base-content/70">
+            Remplacez toujours <code>href</code> par <code>routerLink</code> (importé depuis
+            <code>&#64;angular/router</code>) pour éviter le rechargement complet de la page.
+            Ajoutez <code>routerLinkActive</code> pour styliser le lien actif.
+          </p>
+
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="templateNavCode | shiki: 'html' : 'vitesse-dark' | async"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Navigation TS -->
+      <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="card-title text-base text-secondary">Depuis le TypeScript</h3>
+            <span class="badge badge-secondary badge-outline text-xs">inject(Router)</span>
+          </div>
+          <p class="text-xs text-base-content/70">
+            Pour rediriger l'utilisateur après une action (soumission d'un formulaire, connexion
+            réussie), injectez le service <code>Router</code> et appelez
+            <code>.navigate([...])</code>.
+          </p>
+
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="programmaticNavCode | shiki: 'typescript' : 'vitesse-dark' | async"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🎯 SECTION 3 : Récupérer les paramètres d'URL (:id) -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">📦</span> 3. Lire les Paramètres d'URL (<code>:id</code>)
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <!-- Historique : ActivatedRoute -->
+      <div class="card bg-base-100 shadow-xl border-2 border-warning/40">
+        <div class="card-body space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="card-title text-base text-warning">Via <code>ActivatedRoute</code></h3>
+            <span class="badge badge-warning badge-outline text-xs">Historique</span>
+          </div>
+          <p class="text-xs text-base-content/70">
+            Nécessite d'injecter <code>ActivatedRoute</code>. Attention : <code>snapshot</code> ne
+            se met pas à jour si l'utilisateur passe de <code>/users/42</code> à
+            <code>/users/99</code> sans quitter le composant.
+          </p>
+
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="classicParamsCode | shiki: 'typescript' : 'vitesse-dark' | async"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Moderne : withComponentInputBinding -->
+      <div class="card bg-base-100 shadow-xl border-2 border-success/40">
+        <div class="card-body space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="card-title text-base text-success">
+              Via <code>input()</code> + <code>withComponentInputBinding()</code>
+            </h3>
+            <span class="badge badge-success text-white text-xs">Standard Moderne</span>
+          </div>
+          <p class="text-xs text-base-content/70">
+            Angular lie automatiquement chaque paramètre d'URL (<code>:id</code>) ou
+            <em>queryParam</em> à un <code>input()</code> du même nom. Le Signal se met à jour
+            réactivement à chaque changement d'URL !
+          </p>
+
+          <div
+            class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+            [innerHTML]="modernParamsCode | shiki: 'typescript' : 'vitesse-dark' | async"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🛡️ SECTION 4 : Sécuriser les routes avec les Guards -->
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold flex items-center gap-2 border-b-2 border-base-300 pb-2">
+      <span class="text-3xl">🛡️</span> 4. Protéger les Routes avec un Guard Fonctionnel
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-3">
+          <h3 class="card-title text-base text-accent">Le type <code>CanActivateFn</code></h3>
+          <p class="text-xs text-base-content/80">
+            Un <strong>Route Guard</strong> est une fonction exécutée par Angular
+            <em>avant</em> d'activer une route. Elle permet de vérifier si l'utilisateur est
+            authentifié ou possède le bon rôle.
+          </p>
+          <ul class="list-disc list-inside text-xs space-y-1 text-base-content/70">
+            <li>Retourner <code>true</code> : autorise l'accès à la page.</li>
+            <li>Retourner <code>false</code> : bloque la navigation.</li>
+            <li>
+              Retourner un <code>UrlTree</code> (<code>router.createUrlTree(['/login'])</code>) :
+              annule la navigation et redirige vers la page de connexion.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block mb-1">
+          Guard fonctionnel avec inject() (auth.guard.ts) :
+        </span>
+        <div
+          class="rounded-xl overflow-hidden border border-base-300 bg-[#121212] text-xs font-mono [&>pre]:p-4! [&>pre]:m-0! [&>pre]:overflow-x-auto shadow-md"
+          [innerHTML]="functionalGuardCode | shiki: 'typescript' : 'vitesse-dark' | async"
+        ></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 💡 Synthèse -->
+  <div class="card bg-base-200 shadow-lg border border-base-300">
+    <div class="card-body">
+      <h3 class="card-title text-primary mb-2">🎯 Bonnes pratiques à retenir</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mt-2">
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-success block mb-1">1. Ordre des routes crucial</span>
+          Angular évalue le tableau <code>routes</code> du haut vers le bas et s'arrête à la
+          première correspondance. Placez toujours les routes spécifiques avant les routes
+          dynamiques, et <code>**</code> tout à la fin.
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-info block mb-1">2. Lazy Loading systématique</span>
+          Privilégiez <code>loadComponent: () =&gt; import(...)</code> pour vos pages secondaires
+          afin de réduire le temps de chargement initial de votre application.
+        </div>
+
+        <div class="p-4 bg-base-100 rounded-box border border-base-300">
+          <span class="font-bold text-warning block mb-1">3. Sécurité côté Backend</span>
+          Un <code>CanActivateFn</code> améliore l'expérience utilisateur en masquant les pages
+          privées, mais ne remplace jamais la vérification du token JWT côté serveur (API).
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
