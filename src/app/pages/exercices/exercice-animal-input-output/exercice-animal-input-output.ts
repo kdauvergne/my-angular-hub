@@ -1,5 +1,14 @@
 import { Component, signal, computed } from '@angular/core';
-import { AnimalCard, Animal } from '../../../components/animal-card/animal-card';
+import { AnimalCard } from '../../../components/animal-card/animal-card';
+
+interface Animal {
+  id: number;
+  name: string;
+  species: string;
+  age: number;
+  energyLevel: number;
+  isAdopted: boolean;
+}
 
 @Component({
   imports: [AnimalCard],

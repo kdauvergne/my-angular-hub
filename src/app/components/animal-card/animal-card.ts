@@ -1,14 +1,5 @@
 import { Component, computed, input, output } from '@angular/core';
 
-export interface Animal {
-  id: number;
-  name: string;
-  species: string;
-  age: number;
-  energyLevel: number;
-  isAdopted: boolean;
-}
-
 @Component({
   imports: [],
   selector: 'app-animal-card',
@@ -17,12 +8,15 @@ export interface Animal {
 })
 export class AnimalCard {
   //* propriétés d'entrée nécessaires (input)
-  id = input.required<number>();
-  name = input.required<string>();
-  species = input.required<string>();
-  age = input<number>(2);
-  energyLevel = input<number>(50);
-  isAdopted = input<boolean>(false);
+
+  // propriétés obligatoires
+  readonly name = input.required<string>();
+  readonly species = input.required<string>();
+
+  // propriétés optionnelles avec valeurs par défaut
+  readonly age = input<number>(2);
+  readonly energyLevel = input<number>(50);
+  readonly isAdopted = input<boolean>(false);
 
   // affichage émoji selon la race
   emoji = computed(() => {
